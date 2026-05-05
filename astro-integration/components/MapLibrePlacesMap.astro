@@ -1,0 +1,25 @@
+---
+const { services = [], height = '520px', mapStyle = 'https://demotiles.maplibre.org/style.json' } = Astro.props;
+---
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.5.0/dist/maplibre-gl.css" />
+<div id="pw-map" class="pw-map" style={`height:${height}`}></div>
+<script src="https://unpkg.com/maplibre-gl@5.5.0/dist/maplibre-gl.js"></script>
+<script is:inline define:vars={{ services, mapStyle }}>
+  const el = document.getElementById('pw-map');
+  if (el && window.maplibregl) {
+    const start = services[0] ? [services[0].lon, services[0].lat] : [-98.5, 39.8];
+    const map = new maplibregl.Map({ container: el, style: mapStyle, center: start, zoom: services.length ? 11 : 3 });
+    map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-right');
+    const bounds = new maplibregl.LngLatBounds();
+    services.forEach((service) => {
+      if (!Number.isFinite(service.lat) || !Number.isFinite(service.lon)) return;
+      const popup = new maplibregl.Popup({ offset: 18 }).setHTML(`<strong>${service.name || 'Dog service'}</strong><br><small>${service.category || ''}</small><br><small>${service.address?.display || 'Verify details before visiting.'}</small>`);
+      new maplibregl.Marker({ color: '#d88a2b' }).setLngLat([service.lon, service.lat]).setPopup(popup).addTo(map);
+      bounds.extend([service.lon, service.lat]);
+    });
+    if (services.length) map.on('load', () => map.fitBounds(bounds, { padding: 56, maxZoom: 14 }));
+  }
+</script>
+<style>
+  .pw-map { width: 100%; min-height: 360px; border-radius: 1.5rem; overflow: hidden; border: 1px solid rgba(19, 69, 74, .14); box-shadow: inset 0 0 0 1px rgba(255,255,255,.55), 0 22px 50px rgba(19, 69, 74, .12); }
+</style>

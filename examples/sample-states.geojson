@@ -1,0 +1,1 @@
+{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"NAME":"California","STUSPS":"CA"},"geometry":{"type":"Polygon","coordinates":[[[-125,32],[-113,32],[-113,42],[-125,42],[-125,32]]]}}]}

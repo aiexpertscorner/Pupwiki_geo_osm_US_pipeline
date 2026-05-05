@@ -1,0 +1,10 @@
+{
+  "state": {"minPois": 1, "indexable": true},
+  "category": {"minPois": 1, "indexable": true},
+  "stateCategory": {"minPois": 20, "indexable": true},
+  "city": {"minPois": 10, "indexable": true},
+  "cityCategory": {"minPois": 3, "minAverageQuality": 40, "indexable": true},
+  "poiDetail": {"minQuality": 75, "indexable": false},
+  "experimentalCategoriesDefaultNoindex": true,
+  "avoidClaims": ["best", "top-rated", "verified", "open now", "24/7"]
+}

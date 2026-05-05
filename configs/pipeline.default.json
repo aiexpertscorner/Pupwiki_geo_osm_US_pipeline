@@ -1,0 +1,45 @@
+{
+  "version": "v1",
+  "dataRoots": {
+    "raw": "data-raw",
+    "work": "data-work",
+    "build": "data-build/places/v1",
+    "public": "public/data/places/v1"
+  },
+  "osm": {
+    "preferredSource": "google-drive",
+    "googleDriveFileId": "1z3fynwYHrnx-9HzvsXrS1izorU8dD5AY",
+    "localPbf": "data-raw/osm/google-drive/us-latest.osm.pbf",
+    "geofabrikFallbackUrl": "https://download.geofabrik.de/north-america/us-latest.osm.pbf"
+  },
+  "boundaries": {
+    "statesGeojson": "data-work/boundaries/us-states.geojson",
+    "placesGeojson": "data-work/boundaries/us-places.geojson",
+    "countiesGeojson": "data-work/boundaries/us-counties.geojson",
+    "countySubdivisionsGeojson": "data-work/boundaries/us-county-subdivisions.geojson",
+    "cbsaGeojson": "data-work/boundaries/us-cbsa.geojson"
+  },
+  "output": {
+    "writeGzip": true,
+    "writeBrotli": false,
+    "prettyJson": false,
+    "maxShardRecords": 5000,
+    "keepDebugTagsInWorkFiles": true,
+    "stripDebugTagsInFrontendShards": true
+  },
+  "seo": {
+    "statePageMinPois": 1,
+    "categoryPageMinPois": 1,
+    "stateCategoryPageMinPois": 20,
+    "cityPageMinPois": 10,
+    "cityCategoryPageMinPois": 3,
+    "cityCategoryMinAverageQuality": 40,
+    "poiDetailPageMinQuality": 75
+  },
+  "cloudflare": {
+    "mode": "hybrid",
+    "r2Bucket": "pupwiki-places",
+    "r2Prefix": "places/v1",
+    "publicBaseUrl": "https://static.pupwiki.com/places/v1"
+  }
+}

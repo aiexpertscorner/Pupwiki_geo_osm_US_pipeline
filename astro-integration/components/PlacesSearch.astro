@@ -1,0 +1,61 @@
+---
+const indexUrl = Astro.props.indexUrl ?? '/data/places/v1/search-index.min.json';
+---
+<div class="pw-places-search" data-index-url={indexUrl}>
+  <div class="pw-search-shell">
+    <input id="pw-place-search" type="search" autocomplete="off" placeholder="Search your city, e.g. Austin, TX" />
+    <button id="pw-near-me" type="button" aria-label="Find dog services near me">📍 Near me</button>
+  </div>
+  <div id="pw-place-results" class="pw-place-results" hidden></div>
+</div>
+
+<script>
+  const root = document.querySelector('.pw-places-search');
+  const input = document.getElementById('pw-place-search');
+  const results = document.getElementById('pw-place-results');
+  const gps = document.getElementById('pw-near-me');
+  let index = [];
+  const indexUrl = root?.dataset.indexUrl || '/data/places/v1/search-index.min.json';
+  function distanceKm(lat1, lon1, lat2, lon2) {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat/2) ** 2 + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2) ** 2;
+    return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
+  }
+  async function loadIndex() {
+    if (!index.length) index = await fetch(indexUrl).then(r => r.json()).catch(() => []);
+  }
+  function render(matches) {
+    if (!matches.length) { results.hidden = true; return; }
+    results.innerHTML = matches.slice(0, 8).map(m => `<a href="${m.slug}" class="pw-place-hit"><strong>${m.city}, ${m.state}</strong><span>${m.count} dog places</span></a>`).join('');
+    results.hidden = false;
+  }
+  input?.addEventListener('input', async (event) => {
+    await loadIndex();
+    const q = event.target.value.toLowerCase().trim();
+    if (q.length < 2) { results.hidden = true; return; }
+    render(index.filter(item => (item.searchKey || '').includes(q) || `${item.city} ${item.state}`.toLowerCase().includes(q)));
+  });
+  gps?.addEventListener('click', async () => {
+    await loadIndex();
+    if (!navigator.geolocation || !index.length) return;
+    gps.textContent = 'Finding…';
+    navigator.geolocation.getCurrentPosition((pos) => {
+      const { latitude, longitude } = pos.coords;
+      const nearest = index.reduce((best, cur) => distanceKm(latitude, longitude, cur.lat, cur.lon) < distanceKm(latitude, longitude, best.lat, best.lon) ? cur : best, index[0]);
+      window.location.href = nearest.slug;
+    }, () => { gps.textContent = '📍 Near me'; });
+  });
+  loadIndex();
+</script>
+
+<style>
+  .pw-places-search { width: min(100%, 780px); position: relative; }
+  .pw-search-shell { display: flex; gap: .5rem; padding: .5rem; border: 1px solid rgba(19, 69, 74, .16); border-radius: 999px; background: #fffaf2; box-shadow: 0 16px 44px rgba(19, 69, 74, .12); }
+  .pw-search-shell input { min-width: 0; flex: 1; border: 0; background: transparent; padding: .95rem 1rem; font: inherit; outline: none; }
+  .pw-search-shell button { border: 0; border-radius: 999px; padding: .85rem 1rem; background: #0f4f52; color: white; font-weight: 800; cursor: pointer; }
+  .pw-place-results { position: absolute; left: 0; right: 0; top: calc(100% + .5rem); z-index: 20; background: white; border-radius: 1rem; overflow: hidden; box-shadow: 0 24px 60px rgba(19, 69, 74, .18); }
+  .pw-place-hit { display: flex; justify-content: space-between; gap: 1rem; padding: .95rem 1.1rem; color: inherit; text-decoration: none; border-bottom: 1px solid rgba(19, 69, 74, .08); }
+  .pw-place-hit:hover { background: #fff4dd; }
+</style>

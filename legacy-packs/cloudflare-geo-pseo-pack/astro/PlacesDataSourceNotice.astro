@@ -1,0 +1,16 @@
+---
+interface Props {
+  emergency?: boolean;
+}
+const { emergency = false } = Astro.props;
+---
+
+<aside class="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-slate-700">
+  <strong class="text-slate-950">Data note:</strong>
+  PupWiki Places uses OpenStreetMap community data and may be incomplete or outdated.
+  {emergency ? (
+    <span> For emergency veterinary care, call first and verify current availability before traveling.</span>
+  ) : (
+    <span> Always verify details before visiting.</span>
+  )}
+</aside>

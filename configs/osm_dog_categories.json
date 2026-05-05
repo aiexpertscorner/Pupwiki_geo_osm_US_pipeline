@@ -1,0 +1,48 @@
+{
+  "categories": [
+    {
+      "id": "veterinary-clinics",
+      "label": "Veterinary clinics",
+      "tier": "A",
+      "indexable": true,
+      "description": "Veterinary clinics and animal hospitals from OSM veterinary tags.",
+      "rules": [
+        {"all": {"amenity": "veterinary"}},
+        {"all": {"healthcare": "veterinary"}}
+      ],
+      "excludeIfEmergency": true,
+      "confidence": "high"
+    },
+    {
+      "id": "emergency-vets",
+      "label": "Emergency vets",
+      "tier": "A",
+      "indexable": true,
+      "description": "Emergency/urgent veterinary locations. Emergency availability must be verified before visiting.",
+      "rules": [
+        {"all": {"amenity": "veterinary", "emergency": "yes"}},
+        {"all": {"healthcare": "veterinary", "emergency": "yes"}},
+        {"anyBase": [{"amenity": "veterinary"}, {"healthcare": "veterinary"}], "nameRegex": "emergency|urgent|24 hour|24-hour|animal hospital|veterinary emergency"}
+      ],
+      "confidence": "medium"
+    },
+    {"id": "dog-parks", "label": "Dog parks", "tier": "A", "indexable": true, "rules": [{"all": {"leisure": "dog_park"}}], "confidence": "high"},
+    {"id": "pet-stores", "label": "Pet stores", "tier": "A", "indexable": true, "rules": [{"all": {"shop": "pet"}}], "confidence": "high"},
+    {"id": "dog-grooming", "label": "Dog grooming", "tier": "A", "indexable": true, "rules": [{"all": {"shop": "pet_grooming"}}, {"nameRegex": "dog groom|pet groom|grooming|pet salon"}], "confidence": "medium"},
+    {"id": "animal-shelters", "label": "Animal shelters", "tier": "A", "indexable": true, "rules": [{"all": {"amenity": "animal_shelter"}}], "confidence": "medium"},
+    {"id": "dog-boarding-daycare", "label": "Dog boarding and daycare", "tier": "A", "indexable": true, "rules": [{"all": {"amenity": "animal_boarding"}}, {"all": {"amenity": "dog_daycare"}}, {"nameRegex": "dog daycare|dog boarding|kennel|pet boarding"}], "confidence": "medium"},
+    {"id": "dog-training", "label": "Dog training", "tier": "A", "indexable": true, "rules": [{"all": {"amenity": "animal_training"}}, {"all": {"animal_training": "dog"}}, {"nameRegex": "dog training|obedience|puppy class|canine training"}], "confidence": "medium"},
+    {"id": "dog-friendly-hotels", "label": "Pet-friendly hotels", "tier": "B", "indexable": false, "rules": [{"amenityOrTourism": ["hotel", "motel", "guest_house"], "dogAccess": true}], "confidence": "low"},
+    {"id": "dog-friendly-restaurants", "label": "Dog-friendly restaurants and cafes", "tier": "B", "indexable": false, "rules": [{"amenityIn": ["restaurant", "cafe", "bar", "pub"], "dogAccess": true}], "confidence": "low"},
+    {"id": "dog-friendly-beaches", "label": "Dog-friendly beaches", "tier": "B", "indexable": false, "rules": [{"anyBase": [{"natural": "beach"}, {"leisure": "beach"}], "dogAccess": true}], "confidence": "low"},
+    {"id": "dog-friendly-parks", "label": "Dog-friendly parks", "tier": "B", "indexable": false, "rules": [{"all": {"leisure": "park"}, "dogAccess": true}], "confidence": "low"},
+    {"id": "dog-waste-stations", "label": "Dog waste stations", "tier": "C", "indexable": false, "rules": [{"all": {"amenity": "waste_basket", "waste": "dog_excrement"}}, {"all": {"amenity": "dog_toilet"}}], "confidence": "medium"},
+    {"id": "dog-water-points", "label": "Dog water points", "tier": "C", "indexable": false, "rules": [{"all": {"amenity": "drinking_water"}, "dogAccess": true}], "confidence": "low"},
+    {"id": "dog-wash", "label": "Dog wash", "tier": "C", "indexable": false, "rules": [{"all": {"dog_washing": "yes"}}, {"nameRegex": "dog wash|pet wash|self service pet wash"}], "confidence": "medium"},
+    {"id": "pet-crematoriums", "label": "Pet crematoriums and memorial services", "tier": "C", "indexable": false, "rules": [{"all": {"amenity": "crematorium", "animal": "yes"}}, {"all": {"amenity": "grave_yard", "animal": "yes"}}], "confidence": "low"}
+  ],
+  "dogAccessValues": ["yes", "designated", "leashed", "outside", "permissive"],
+  "safeFrontendTags": [
+    "name", "amenity", "shop", "leisure", "healthcare", "tourism", "natural", "emergency", "dog", "pets", "pets_allowed", "opening_hours", "website", "contact:website", "phone", "contact:phone", "email", "contact:email", "addr:housenumber", "addr:street", "addr:city", "addr:state", "addr:postcode"
+  ]
+}

@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local raw data: huge and reproducible
+/data-raw/
+/data-work/
+/data-build/
+/tmp/
+/logs/
+
+# Archives and generated map data
+*.osm.pbf
+*.osm.bz2
+*.pbf
+*.shp
+*.shx
+*.dbf
+*.prj
+*.cpg
+*.gpkg
+*.geojson.gz
+*.ndjson
+*.ndjson.gz
+*.parquet
+*.zip
+*.7z
+*.gz
+*.br
+
+# Keep repo placeholders
+!data-raw/.gitkeep
+!data-work/.gitkeep
+!data-build/.gitkeep
+!tmp/.gitkeep
+
+# Node/Astro integration consumers
+node_modules/
+dist/
+.astro/
+.wrangler/

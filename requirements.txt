@@ -1,0 +1,12 @@
+requests>=2.32.0
+tqdm>=4.66.0
+orjson>=3.10.0
+shapely>=2.0.0
+python-dotenv>=1.0.0
+PyYAML>=6.0.0
+# Optional but recommended for full functionality:
+# osmium>=3.7.0       # Python bindings for OSM PBF extraction
+# geopandas>=0.14.0   # converting shapefiles/geopackages to GeoJSON
+# pyogrio>=0.9.0      # faster vector IO backend
+# gdown>=5.2.0        # Google Drive file download
+# brotli>=1.1.0       # optional .br compression

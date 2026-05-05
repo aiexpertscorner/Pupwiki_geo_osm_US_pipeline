@@ -1,0 +1,130 @@
+{
+  "categories": [
+    {
+      "id": "veterinary_clinics",
+      "label": "Veterinary clinics",
+      "osm": [
+        "amenity=veterinary",
+        "healthcare=veterinary"
+      ]
+    },
+    {
+      "id": "emergency_vets",
+      "label": "Emergency vets",
+      "osm": [
+        "amenity=veterinary + emergency=yes",
+        "healthcare=veterinary + emergency=yes",
+        "name~emergency|urgent|24 hour|animal hospital"
+      ]
+    },
+    {
+      "id": "rehab",
+      "label": "Animal rehabilitation / physio",
+      "osm": [
+        "healthcare=physiotherapist + animal=yes",
+        "name~animal rehab|pet rehab|canine rehab|veterinary rehabilitation"
+      ]
+    },
+    {
+      "id": "pet_stores",
+      "label": "Pet stores",
+      "osm": [
+        "shop=pet",
+        "shop=pet + pet~dog|yes"
+      ]
+    },
+    {
+      "id": "grooming",
+      "label": "Dog grooming",
+      "osm": [
+        "shop=pet_grooming"
+      ]
+    },
+    {
+      "id": "dog_bakeries",
+      "label": "Dog bakeries",
+      "osm": [
+        "shop=pastry + diet:dog=yes"
+      ]
+    },
+    {
+      "id": "training",
+      "label": "Dog training",
+      "osm": [
+        "amenity=animal_training"
+      ]
+    },
+    {
+      "id": "breeders",
+      "label": "Animal breeding",
+      "osm": [
+        "amenity=animal_breeding"
+      ]
+    },
+    {
+      "id": "shelters",
+      "label": "Animal shelters",
+      "osm": [
+        "amenity=animal_shelter"
+      ]
+    },
+    {
+      "id": "boarding_daycare",
+      "label": "Boarding and daycare",
+      "osm": [
+        "amenity=animal_boarding",
+        "amenity=dog_daycare"
+      ]
+    },
+    {
+      "id": "dog_walkers",
+      "label": "Dog walkers",
+      "osm": [
+        "office=dog_walker"
+      ]
+    },
+    {
+      "id": "dog_parks",
+      "label": "Dog parks",
+      "osm": [
+        "leisure=dog_park"
+      ]
+    },
+    {
+      "id": "dog_beaches",
+      "label": "Dog-friendly beaches",
+      "osm": [
+        "leisure=beach + dog=yes"
+      ]
+    },
+    {
+      "id": "dog_friendly_hotels",
+      "label": "Dog-friendly hotels",
+      "osm": [
+        "tourism=hotel + pets_allowed=yes"
+      ]
+    },
+    {
+      "id": "dog_friendly_food_drink",
+      "label": "Dog-friendly restaurants/cafes/pubs",
+      "osm": [
+        "amenity~restaurant|pub|cafe + dog=yes"
+      ]
+    },
+    {
+      "id": "pet_aftercare",
+      "label": "Pet aftercare",
+      "osm": [
+        "amenity=crematorium + animal=yes",
+        "amenity=grave_yard + animal=yes"
+      ]
+    },
+    {
+      "id": "dog_waste",
+      "label": "Dog waste facilities",
+      "osm": [
+        "amenity=waste_basket + waste=dog_excrement"
+      ]
+    }
+  ]
+}

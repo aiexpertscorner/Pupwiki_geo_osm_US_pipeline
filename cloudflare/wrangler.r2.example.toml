@@ -1,0 +1,6 @@
+name = "pupwiki-places-data"
+compatibility_date = "2026-05-05"
+
+[[r2_buckets]]
+binding = "PLACES_BUCKET"
+bucket_name = "pupwiki-places"

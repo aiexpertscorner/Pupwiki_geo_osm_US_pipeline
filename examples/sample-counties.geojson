@@ -1,0 +1,1 @@
+{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"NAME":"Los Angeles","STUSPS":"CA"},"geometry":{"type":"Polygon","coordinates":[[[-119,33.3],[-117,33.3],[-117,34.8],[-119,34.8],[-119,33.3]]]}}]}

@@ -1,0 +1,90 @@
+<div class="relative mx-auto w-full max-w-2xl">
+  <div class="flex overflow-hidden rounded-full border border-amber-300 bg-white shadow-lg">
+    <input
+      id="places-search-input"
+      class="min-w-0 flex-1 px-5 py-4 text-base outline-none"
+      type="search"
+      placeholder="Search dog places by city, e.g. Austin, TX"
+      autocomplete="off"
+    />
+    <button
+      id="places-near-me"
+      class="px-4 font-semibold text-amber-700 hover:bg-amber-50"
+      type="button"
+    >
+      Near me
+    </button>
+  </div>
+  <div id="places-search-results" class="absolute z-30 mt-2 hidden w-full overflow-hidden rounded-2xl border bg-white shadow-xl"></div>
+</div>
+
+<script>
+  const DATA_BASE = '/data/places/v1';
+  const input = document.getElementById('places-search-input');
+  const results = document.getElementById('places-search-results');
+  const nearMe = document.getElementById('places-near-me');
+  let index = [];
+
+  async function loadIndex() {
+    if (index.length) return index;
+    const res = await fetch(`${DATA_BASE}/search-index.min.json`);
+    index = await res.json();
+    return index;
+  }
+
+  function distanceKm(lat1, lon1, lat2, lon2) {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos(lat1 * Math.PI / 180) *
+      Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) ** 2;
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  }
+
+  function render(matches) {
+    if (!matches.length) {
+      results.classList.add('hidden');
+      return;
+    }
+
+    results.innerHTML = matches.slice(0, 8).map((m) => `
+      <a href="${m.slug}" class="block px-5 py-3 hover:bg-amber-50">
+        <span class="font-bold">${m.city}</span>, ${m.state}
+        <span class="float-right text-xs text-slate-500">${m.count} places</span>
+      </a>
+    `).join('');
+
+    results.classList.remove('hidden');
+  }
+
+  input?.addEventListener('input', async (event) => {
+    const q = event.target.value.trim().toLowerCase();
+    if (q.length < 2) {
+      results.classList.add('hidden');
+      return;
+    }
+    const rows = await loadIndex();
+    render(rows.filter((row) => row.searchKey.includes(q)));
+  });
+
+  nearMe?.addEventListener('click', async () => {
+    const rows = await loadIndex();
+    if (!navigator.geolocation) return;
+
+    nearMe.textContent = 'Finding...';
+    navigator.geolocation.getCurrentPosition((pos) => {
+      const { latitude, longitude } = pos.coords;
+      const nearest = rows.reduce((best, row) => {
+        const d = distanceKm(latitude, longitude, row.lat, row.lon);
+        return !best || d < best.distance ? { row, distance: d } : best;
+      }, null);
+      if (nearest?.row?.slug) window.location.href = nearest.row.slug;
+      nearMe.textContent = 'Near me';
+    }, () => {
+      nearMe.textContent = 'Near me';
+    });
+  });
+</script>

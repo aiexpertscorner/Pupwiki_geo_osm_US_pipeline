@@ -1,0 +1,36 @@
+{
+  "name": "pupwiki-dog-services-map-claude-code-pack",
+  "version": "1.0.0",
+  "generated_at": "2026-04-26",
+  "files": [
+    "README.md",
+    "RUN_ORDER.md",
+    "docs/cloudflare-static-first-architecture.md",
+    "docs/dog-services-map-spec.md",
+    "docs/osm-category-reference.md",
+    "prompts/00_MASTER_PROMPT.md",
+    "prompts/01_REPO_AUDIT.md",
+    "prompts/02_DATA_CONTRACT_AND_OSM_CONFIG.md",
+    "prompts/03_GENERATOR_SCRIPTS.md",
+    "prompts/04_MAPLIBRE_COMPONENTS.md",
+    "prompts/05_ROUTE_INTEGRATION.md",
+    "prompts/06_SEO_LOCATION_PAGES.md",
+    "prompts/07_CLOUDFLARE_D1_R2_OPTIONAL.md",
+    "prompts/08_QA_PERFORMANCE_CLEANUP.md",
+    "snippets/d1-schema.sql",
+    "snippets/dog-service-categories.sample.ts",
+    "snippets/overpass-query-templates.md",
+    "snippets/sample-geojson-template.json"
+  ],
+  "recommended_prompt_order": [
+    "prompts/00_MASTER_PROMPT.md",
+    "prompts/01_REPO_AUDIT.md",
+    "prompts/02_DATA_CONTRACT_AND_OSM_CONFIG.md",
+    "prompts/03_GENERATOR_SCRIPTS.md",
+    "prompts/04_MAPLIBRE_COMPONENTS.md",
+    "prompts/05_ROUTE_INTEGRATION.md",
+    "prompts/08_QA_PERFORMANCE_CLEANUP.md",
+    "prompts/06_SEO_LOCATION_PAGES.md",
+    "prompts/07_CLOUDFLARE_D1_R2_OPTIONAL.md"
+  ]
+}

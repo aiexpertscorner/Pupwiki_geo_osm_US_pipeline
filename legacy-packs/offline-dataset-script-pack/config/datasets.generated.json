@@ -1,0 +1,3904 @@
+{
+  "name": "PupWiki Geo Pipeline Dataset Manifest",
+  "created_from": "geodatapupwiki.xlsm",
+  "description": "Generated offline from the XLSM. Pattern-derived URLs should be checked with --verify-remote before heavy runs.",
+  "priorities": {
+    "P1": "core MVP",
+    "P2": "early quality",
+    "P3": "after MVP",
+    "P4": "advanced"
+  },
+  "folder_plan": [
+    {
+      "Folder": "data-raw/osm/geofabrik/",
+      "Contents": "Geofabrik US/state PBFs, poly files and updates",
+      "Notes": "Input only; keep gitignored."
+    },
+    {
+      "Folder": "data-raw/census/2025/cartographic/",
+      "Contents": "Official Census 2025 cartographic boundary files",
+      "Notes": "Primary spatial-join source."
+    },
+    {
+      "Folder": "data-raw/census/2025/gazetteer/",
+      "Contents": "Census Gazetteer TXT files",
+      "Notes": "Centroids, names, GEOIDs, search indexes."
+    },
+    {
+      "Folder": "data-raw/census/2025/tigerline/",
+      "Contents": "TIGER/Line legal boundaries and optional roads/water",
+      "Notes": "QA or precision fallback."
+    },
+    {
+      "Folder": "data-raw/usgs/gnis/",
+      "Contents": "GNIS domestic names and feature classes",
+      "Notes": "Aliases, rural place names and outdoor names."
+    },
+    {
+      "Folder": "data-raw/whosonfirst/",
+      "Contents": "Who’s On First admin/locality/neighbourhood datasets",
+      "Notes": "Stable IDs, aliases and hierarchy."
+    },
+    {
+      "Folder": "data-raw/alltheplaces/latest/",
+      "Contents": "AllThePlaces downloads",
+      "Notes": "Chain/business POI enrichment."
+    },
+    {
+      "Folder": "data-work/",
+      "Contents": "Intermediate normalized and geo-enriched NDJSON/Parquet",
+      "Notes": "Generated locally; keep gitignored."
+    },
+    {
+      "Folder": "data-build/places/v1/",
+      "Contents": "R2/Cloudflare-ready frontend shards",
+      "Notes": "Upload heavy shards to R2; copy compact manifests to PupWiki."
+    },
+    {
+      "Folder": "public/data/places/v1/",
+      "Contents": "Only compact manifests/search index inside PupWiki",
+      "Notes": "Do not store full US shards in frontend repo."
+    }
+  ],
+  "source_links": [
+    {
+      "Source": "US Census Cartographic Boundary Files",
+      "URL": "https://www.census.gov/geographies/mapping-files/2025/geo/carto-boundary-file.html"
+    },
+    {
+      "Source": "US Census Gazetteer Files",
+      "URL": "https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.html"
+    },
+    {
+      "Source": "US Census TIGER/Line",
+      "URL": "https://www.census.gov/geo/maps-data/data/tiger-line.html"
+    },
+    {
+      "Source": "US Census ACS 2024 5-Year API",
+      "URL": "https://api.census.gov/data/2024/acs/acs5.html"
+    },
+    {
+      "Source": "US Census Population Estimates",
+      "URL": "https://www.census.gov/programs-surveys/popest.html"
+    },
+    {
+      "Source": "Geofabrik US OSM downloads",
+      "URL": "https://download.geofabrik.de/north-america/us.html"
+    },
+    {
+      "Source": "OpenStreetMap Copyright/ODbL",
+      "URL": "https://www.openstreetmap.org/copyright"
+    },
+    {
+      "Source": "USGS GNIS Downloads",
+      "URL": "https://www.usgs.gov/us-board-on-geographic-names/download-gnis-data"
+    },
+    {
+      "Source": "Who’s On First Downloads",
+      "URL": "https://www.whosonfirst.org/download/"
+    },
+    {
+      "Source": "AllThePlaces Downloads",
+      "URL": "https://alltheplaces.xyz/"
+    },
+    {
+      "Source": "OpenAddresses",
+      "URL": "https://openaddresses.io/"
+    },
+    {
+      "Source": "NPS Data API",
+      "URL": "https://www.nps.gov/subjects/digital/nps-data-api.htm"
+    },
+    {
+      "Source": "Recreation.gov Use Our Data",
+      "URL": "https://www.recreation.gov/use-our-data"
+    },
+    {
+      "Source": "RIDB metadata",
+      "URL": "https://agdatacommons.nal.usda.gov/articles/dataset/Recreation_Information_Database_RIDB_/24661806"
+    },
+    {
+      "Source": "USGS PAD-US Data Download",
+      "URL": "https://www.usgs.gov/programs/gap-analysis-project/science/pad-us-data-download"
+    },
+    {
+      "Source": "USGS Hydrography / NHD",
+      "URL": "https://www.usgs.gov/index.php/national-hydrography/national-hydrography-dataset"
+    },
+    {
+      "Source": "Natural Earth",
+      "URL": "https://www.naturalearthdata.com/"
+    },
+    {
+      "Source": "Microsoft US Building Footprints",
+      "URL": "https://github.com/microsoft/USBuildingFootprints"
+    },
+    {
+      "Source": "Microsoft Global ML Building Footprints",
+      "URL": "https://github.com/microsoft/GlobalMLBuildingFootprints"
+    },
+    {
+      "Source": "USDA APHIS Public Search Tool",
+      "URL": "https://www.aphis.usda.gov/animal-care/awa-services/usda-animal-care-public-search-tool"
+    },
+    {
+      "Source": "EPA EJScreen",
+      "URL": "https://www.epa.gov/ejscreen"
+    },
+    {
+      "Source": "ArcGIS Hub",
+      "URL": "https://hub.arcgis.com/"
+    }
+  ],
+  "datasets": [
+    {
+      "Priority": "P1",
+      "Phase": "Core boundaries",
+      "Group": "US Census 2025 Cartographic",
+      "Dataset": "Cartographic Boundary Files — National 1:500,000 bundle",
+      "Specific file/layer": "All available national cartographic layers at 500k",
+      "Source URL": "https://www.census.gov/geographies/mapping-files/2025/geo/carto-boundary-file.html",
+      "Format": "Shapefile / GeoPackage / Geodatabase",
+      "Use in PupWiki": "Primary boundary source for ETL/spatial joins; collect as canonical official boundary pack.",
+      "Recommended local path": "data-raw/census/2025/cartographic/national_500k/",
+      "Notes": "Use 500k for spatial join; do not ship heavy boundaries to browser.",
+      "source_row": 5,
+      "id": "xlsm-row-05-cartographic-boundary-files-national-1-500-000-bundle",
+      "download_items": [
+        {
+          "url": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_us_state_500k.zip",
+          "destination": "data-raw/census/2025/cartographic/national_500k/cb_2025_us_state_500k.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Census cartographic direct URL candidate; validate with --verify-remote.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/cartographic/national_500k/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_us_county_500k.zip",
+          "destination": "data-raw/census/2025/cartographic/national_500k/cb_2025_us_county_500k.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Census cartographic direct URL candidate; validate with --verify-remote.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/cartographic/national_500k/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_us_place_500k.zip",
+          "destination": "data-raw/census/2025/cartographic/national_500k/cb_2025_us_place_500k.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Census cartographic direct URL candidate; validate with --verify-remote.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/cartographic/national_500k/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_us_cousub_500k.zip",
+          "destination": "data-raw/census/2025/cartographic/national_500k/cb_2025_us_cousub_500k.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Census cartographic direct URL candidate; validate with --verify-remote.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/cartographic/national_500k/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_us_cbsa_500k.zip",
+          "destination": "data-raw/census/2025/cartographic/national_500k/cb_2025_us_cbsa_500k.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Census cartographic direct URL candidate; validate with --verify-remote.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/cartographic/national_500k/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 5,
+      "direct_item_count": 5
+    },
+    {
+      "Priority": "P1",
+      "Phase": "Core boundaries",
+      "Group": "US Census 2025 Cartographic",
+      "Dataset": "States",
+      "Specific file/layer": "State boundaries",
+      "Source URL": "https://www.census.gov/geographies/mapping-files/2025/geo/carto-boundary-file.html",
+      "Format": "Shapefile / GeoPackage / KML",
+      "Use in PupWiki": "Assign every OSM POI to state; build /places/{state}/ pages and state counts.",
+      "Recommended local path": "data-raw/census/2025/cartographic/states_500k/",
+      "Notes": "Essential.",
+      "source_row": 6,
+      "id": "xlsm-row-06-states",
+      "download_items": [
+        {
+          "url": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_us_state_500k.zip",
+          "destination": "data-raw/census/2025/cartographic/states_500k/cb_2025_us_state_500k.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Census cartographic direct URL candidate; validate with --verify-remote.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/cartographic/states_500k/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P1",
+      "Phase": "Core boundaries",
+      "Group": "US Census 2025 Cartographic",
+      "Dataset": "Counties",
+      "Specific file/layer": "County boundaries",
+      "Source URL": "https://www.census.gov/geographies/mapping-files/2025/geo/carto-boundary-file.html",
+      "Format": "Shapefile / GeoPackage / KML",
+      "Use in PupWiki": "County fallback for POIs outside Census Places; rural SEO and state aggregation.",
+      "Recommended local path": "data-raw/census/2025/cartographic/counties_500k/",
+      "Notes": "Essential fallback layer.",
+      "source_row": 7,
+      "id": "xlsm-row-07-counties",
+      "download_items": [
+        {
+          "url": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_us_county_500k.zip",
+          "destination": "data-raw/census/2025/cartographic/counties_500k/cb_2025_us_county_500k.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Census cartographic direct URL candidate; validate with --verify-remote.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/cartographic/counties_500k/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P1",
+      "Phase": "Core boundaries",
+      "Group": "US Census 2025 Cartographic",
+      "Dataset": "Places",
+      "Specific file/layer": "Incorporated places / Census designated places",
+      "Source URL": "https://www.census.gov/geographies/mapping-files/2025/geo/carto-boundary-file.html",
+      "Format": "Shapefile / GeoPackage / KML",
+      "Use in PupWiki": "City/place spatial join; primary source for /places/{state}/{city}/ URLs.",
+      "Recommended local path": "data-raw/census/2025/cartographic/places_500k/",
+      "Notes": "Essential.",
+      "source_row": 8,
+      "id": "xlsm-row-08-places",
+      "download_items": [
+        {
+          "url": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_us_place_500k.zip",
+          "destination": "data-raw/census/2025/cartographic/places_500k/cb_2025_us_place_500k.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Census cartographic direct URL candidate; validate with --verify-remote.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/cartographic/places_500k/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P1",
+      "Phase": "Core boundaries",
+      "Group": "US Census 2025 Cartographic",
+      "Dataset": "County Subdivisions",
+      "Specific file/layer": "Minor civil divisions / census county divisions",
+      "Source URL": "https://www.census.gov/geographies/mapping-files/2025/geo/carto-boundary-file.html",
+      "Format": "Shapefile / GeoPackage / KML",
+      "Use in PupWiki": "Town/township fallback in states where subdivisions matter; improves rural/local assignment.",
+      "Recommended local path": "data-raw/census/2025/cartographic/county_subdivisions_500k/",
+      "Notes": "Strongly useful in Northeast/Midwest.",
+      "source_row": 9,
+      "id": "xlsm-row-09-county-subdivisions",
+      "download_items": [
+        {
+          "url": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_us_cousub_500k.zip",
+          "destination": "data-raw/census/2025/cartographic/county_subdivisions_500k/cb_2025_us_cousub_500k.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Census cartographic direct URL candidate; validate with --verify-remote.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/cartographic/county_subdivisions_500k/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P1",
+      "Phase": "Metro boundaries",
+      "Group": "US Census 2025 Cartographic",
+      "Dataset": "Core Based Statistical Areas (CBSAs)",
+      "Specific file/layer": "Metropolitan and micropolitan statistical areas",
+      "Source URL": "https://www.census.gov/geographies/mapping-files/2025/geo/carto-boundary-file.html",
+      "Format": "Shapefile / GeoPackage / KML",
+      "Use in PupWiki": "Metro enrichment; future /places/metros/{metro}/ pages; nearby city grouping.",
+      "Recommended local path": "data-raw/census/2025/cartographic/cbsa_500k/",
+      "Notes": "Collect early, use later.",
+      "source_row": 10,
+      "id": "xlsm-row-10-core-based-statistical-areas-cbsas",
+      "download_items": [
+        {
+          "url": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_us_cbsa_500k.zip",
+          "destination": "data-raw/census/2025/cartographic/cbsa_500k/cb_2025_us_cbsa_500k.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Census cartographic direct URL candidate; validate with --verify-remote.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/cartographic/cbsa_500k/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P1",
+      "Phase": "Gazetteer",
+      "Group": "US Census 2025 Gazetteer",
+      "Dataset": "States Gazetteer",
+      "Specific file/layer": "State identifiers, names, area, representative lat/lon",
+      "Source URL": "https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.html",
+      "Format": "Pipe-delimited TXT",
+      "Use in PupWiki": "Official state names/GEOIDs/centroids; normalize state metadata.",
+      "Recommended local path": "data-raw/census/2025/gazetteer/states.txt",
+      "Notes": "Essential.",
+      "source_row": 11,
+      "id": "xlsm-row-11-states-gazetteer",
+      "download_items": [
+        {
+          "url": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2025_Gazetteer/2025_Gaz_state_national.zip",
+          "destination": "data-raw/census/2025/gazetteer/_downloads/2025_Gaz_state_national.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Census Gazetteer ZIP candidate; extract after download.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/gazetteer/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P1",
+      "Phase": "Gazetteer",
+      "Group": "US Census 2025 Gazetteer",
+      "Dataset": "Counties Gazetteer",
+      "Specific file/layer": "County identifiers, names, area, representative lat/lon",
+      "Source URL": "https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.html",
+      "Format": "Pipe-delimited TXT",
+      "Use in PupWiki": "County fallback metadata, county search and county centroid links.",
+      "Recommended local path": "data-raw/census/2025/gazetteer/counties.txt",
+      "Notes": "Essential.",
+      "source_row": 12,
+      "id": "xlsm-row-12-counties-gazetteer",
+      "download_items": [
+        {
+          "url": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2025_Gazetteer/2025_Gaz_counties_national.zip",
+          "destination": "data-raw/census/2025/gazetteer/_downloads/2025_Gaz_counties_national.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Census Gazetteer ZIP candidate; extract after download.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/gazetteer/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P1",
+      "Phase": "Gazetteer",
+      "Group": "US Census 2025 Gazetteer",
+      "Dataset": "Places Gazetteer",
+      "Specific file/layer": "Place identifiers, names, area, representative lat/lon",
+      "Source URL": "https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.html",
+      "Format": "Pipe-delimited TXT",
+      "Use in PupWiki": "City centroids, city search-index, near-me routing, official place names.",
+      "Recommended local path": "data-raw/census/2025/gazetteer/places.txt",
+      "Notes": "Essential.",
+      "source_row": 13,
+      "id": "xlsm-row-13-places-gazetteer",
+      "download_items": [
+        {
+          "url": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2025_Gazetteer/2025_Gaz_places_national.zip",
+          "destination": "data-raw/census/2025/gazetteer/_downloads/2025_Gaz_places_national.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Census Gazetteer ZIP candidate; extract after download.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/gazetteer/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P1",
+      "Phase": "Gazetteer",
+      "Group": "US Census 2025 Gazetteer",
+      "Dataset": "County Subdivisions Gazetteer",
+      "Specific file/layer": "County subdivision identifiers/names/centroids",
+      "Source URL": "https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.html",
+      "Format": "Pipe-delimited TXT",
+      "Use in PupWiki": "Town/township aliases and fallback metadata.",
+      "Recommended local path": "data-raw/census/2025/gazetteer/county_subdivisions.txt",
+      "Notes": "Strongly useful.",
+      "source_row": 14,
+      "id": "xlsm-row-14-county-subdivisions-gazetteer",
+      "download_items": [
+        {
+          "url": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2025_Gazetteer/2025_Gaz_cousubs_national.zip",
+          "destination": "data-raw/census/2025/gazetteer/_downloads/2025_Gaz_cousubs_national.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Census Gazetteer ZIP candidate; extract after download.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/gazetteer/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P1",
+      "Phase": "OSM source",
+      "Group": "Geofabrik",
+      "Dataset": "United States OSM PBF",
+      "Specific file/layer": "Full US OSM extract",
+      "Source URL": "https://download.geofabrik.de/north-america/us.html",
+      "Format": ".osm.pbf",
+      "Use in PupWiki": "Primary source for all dog-related POIs/services; local extraction with osmium/pyosmium.",
+      "Recommended local path": "data-raw/osm/geofabrik/us-latest.osm.pbf",
+      "Notes": "Do not use live Overpass for production.",
+      "source_row": 15,
+      "id": "xlsm-row-15-united-states-osm-pbf",
+      "download_items": [
+        {
+          "url": "https://download.geofabrik.de/north-america/us-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/us-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "Large full-US OSM extract. Enable with --include-large-osm.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us-latest.osm.pbf.md5",
+          "destination": "data-raw/osm/geofabrik/us-latest.osm.pbf.md5",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "Checksum for full US extract.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 2,
+      "direct_item_count": 2
+    },
+    {
+      "Priority": "P1",
+      "Phase": "OSM source",
+      "Group": "Geofabrik",
+      "Dataset": "State-level OSM PBFs",
+      "Specific file/layer": "California/Texas/Florida/New York etc.",
+      "Source URL": "https://download.geofabrik.de/north-america/us.html",
+      "Format": ".osm.pbf",
+      "Use in PupWiki": "Faster MVP/testing by state; useful for incremental batch processing.",
+      "Recommended local path": "data-raw/osm/geofabrik/states/",
+      "Notes": "Start with top states before full US run.",
+      "source_row": 16,
+      "id": "xlsm-row-16-state-level-osm-pbfs",
+      "download_items": [
+        {
+          "url": "https://download.geofabrik.de/north-america/us/alabama-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/alabama-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/alaska-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/alaska-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/arizona-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/arizona-latest.osm.pbf",
+          "kind": "file",
+          "default": true,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/arkansas-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/arkansas-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/california-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/california-latest.osm.pbf",
+          "kind": "file",
+          "default": true,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/colorado-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/colorado-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/connecticut-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/connecticut-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/delaware-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/delaware-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/district-of-columbia-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/district-of-columbia-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/florida-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/florida-latest.osm.pbf",
+          "kind": "file",
+          "default": true,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/georgia-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/georgia-latest.osm.pbf",
+          "kind": "file",
+          "default": true,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/hawaii-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/hawaii-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/idaho-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/idaho-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/illinois-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/illinois-latest.osm.pbf",
+          "kind": "file",
+          "default": true,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/indiana-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/indiana-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/iowa-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/iowa-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/kansas-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/kansas-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/kentucky-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/kentucky-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/louisiana-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/louisiana-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/maine-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/maine-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/maryland-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/maryland-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/massachusetts-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/massachusetts-latest.osm.pbf",
+          "kind": "file",
+          "default": true,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/michigan-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/michigan-latest.osm.pbf",
+          "kind": "file",
+          "default": true,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/minnesota-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/minnesota-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/mississippi-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/mississippi-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/missouri-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/missouri-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/montana-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/montana-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/nebraska-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/nebraska-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/nevada-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/nevada-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/new-hampshire-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/new-hampshire-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/new-jersey-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/new-jersey-latest.osm.pbf",
+          "kind": "file",
+          "default": true,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/new-mexico-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/new-mexico-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/new-york-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/new-york-latest.osm.pbf",
+          "kind": "file",
+          "default": true,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/north-carolina-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/north-carolina-latest.osm.pbf",
+          "kind": "file",
+          "default": true,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/north-dakota-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/north-dakota-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/ohio-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/ohio-latest.osm.pbf",
+          "kind": "file",
+          "default": true,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/oklahoma-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/oklahoma-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/oregon-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/oregon-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/pennsylvania-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/pennsylvania-latest.osm.pbf",
+          "kind": "file",
+          "default": true,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/rhode-island-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/rhode-island-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/south-carolina-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/south-carolina-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/south-dakota-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/south-dakota-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/tennessee-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/tennessee-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/texas-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/texas-latest.osm.pbf",
+          "kind": "file",
+          "default": true,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/utah-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/utah-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/vermont-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/vermont-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/virginia-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/virginia-latest.osm.pbf",
+          "kind": "file",
+          "default": true,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/washington-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/washington-latest.osm.pbf",
+          "kind": "file",
+          "default": true,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/west-virginia-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/west-virginia-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/wisconsin-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/wisconsin-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/wyoming-latest.osm.pbf",
+          "destination": "data-raw/osm/geofabrik/states/wyoming-latest.osm.pbf",
+          "kind": "file",
+          "default": false,
+          "large": true,
+          "notes": "State OSM extract. Top states default if --include-large-osm; all states with --include-all-states.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 51,
+      "direct_item_count": 51
+    },
+    {
+      "Priority": "P1",
+      "Phase": "Licensing",
+      "Group": "OpenStreetMap",
+      "Dataset": "OSM copyright/ODbL attribution page",
+      "Specific file/layer": "Attribution and license reference",
+      "Source URL": "https://www.openstreetmap.org/copyright",
+      "Format": "Web page",
+      "Use in PupWiki": "Required attribution/disclaimer source for generated PupWiki Places data.",
+      "Recommended local path": "docs/sources/osm-license.md",
+      "Notes": "Show OSM contributors credit on pages/maps.",
+      "source_row": 17,
+      "id": "xlsm-row-17-osm-copyright-odbl-attribution-page",
+      "download_items": [
+        {
+          "url": "https://www.openstreetmap.org/copyright",
+          "destination": "docs/sources/osm-license.html",
+          "kind": "page",
+          "default": true,
+          "large": false,
+          "notes": "Archive OSM license/attribution page.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P1/P2",
+      "Phase": "Scoring",
+      "Group": "Census ACS 2024 5-Year",
+      "Dataset": "Detailed Tables",
+      "Specific file/layer": "ACS 5-year detailed tables API",
+      "Source URL": "https://api.census.gov/data/2024/acs/acs5.html",
+      "Format": "API / JSON / CSV",
+      "Use in PupWiki": "Population/context scoring by place/county/metro; page priority and density metrics.",
+      "Recommended local path": "data-raw/census/2024/acs5/detailed/",
+      "Notes": "Use a small variable subset at first.",
+      "source_row": 18,
+      "id": "xlsm-row-18-detailed-tables",
+      "download_items": [
+        {
+          "url": "https://api.census.gov/data/2024/acs/acs5?get=NAME,B01003_001E&for=place:*",
+          "destination": "data-raw/census/2024/acs5/detailed/place_population.json",
+          "kind": "api_json",
+          "default": true,
+          "large": false,
+          "notes": "Small ACS MVP query: place population.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://api.census.gov/data/2024/acs/acs5?get=NAME,B01003_001E&for=county:*",
+          "destination": "data-raw/census/2024/acs5/detailed/county_population.json",
+          "kind": "api_json",
+          "default": true,
+          "large": false,
+          "notes": "Small ACS MVP query: county population.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 2,
+      "direct_item_count": 2
+    },
+    {
+      "Priority": "P1/P2",
+      "Phase": "Scoring",
+      "Group": "Census Population Estimates Program",
+      "Dataset": "State / county / city population estimates",
+      "Specific file/layer": "https://www.census.gov/programs-surveys/popest.html",
+      "Source URL": "CSV / API / XLSX depending release",
+      "Format": "SEO priority ranking by population and market size.",
+      "Use in PupWiki": "data-raw/census/popest/",
+      "Recommended local path": "Use to pick first 5k–15k pages.",
+      "Notes": null,
+      "source_row": 19,
+      "id": "xlsm-row-19-state-county-city-population-estimates",
+      "download_items": [],
+      "download_item_count": 0,
+      "direct_item_count": 0
+    },
+    {
+      "Priority": "P2",
+      "Phase": "Metro boundaries",
+      "Group": "US Census 2025 Cartographic",
+      "Dataset": "Combined Statistical Areas (CSAs)",
+      "Specific file/layer": "Combined metro regions",
+      "Source URL": "https://www.census.gov/geographies/mapping-files/2025/geo/carto-boundary-file.html",
+      "Format": "Shapefile / GeoPackage / KML",
+      "Use in PupWiki": "Large regional pages and internal linking across related metros.",
+      "Recommended local path": "data-raw/census/2025/cartographic/csa_500k/",
+      "Notes": "Optional after CBSA.",
+      "source_row": 20,
+      "id": "xlsm-row-20-combined-statistical-areas-csas",
+      "download_items": [
+        {
+          "url": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_us_csa_500k.zip",
+          "destination": "data-raw/census/2025/cartographic/csa_500k/cb_2025_us_csa_500k.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Census cartographic direct URL candidate; validate with --verify-remote.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/cartographic/csa_500k/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P2",
+      "Phase": "Metro boundaries",
+      "Group": "US Census 2025 Cartographic",
+      "Dataset": "Metropolitan Divisions",
+      "Specific file/layer": "Subdivisions of large metro areas",
+      "Source URL": "https://www.census.gov/geographies/mapping-files/2025/geo/carto-boundary-file.html",
+      "Format": "Shapefile / GeoPackage / KML",
+      "Use in PupWiki": "Break down huge metros like New York or Los Angeles into more useful clusters.",
+      "Recommended local path": "data-raw/census/2025/cartographic/metropolitan_divisions_500k/",
+      "Notes": "Useful for very large city regions.",
+      "source_row": 21,
+      "id": "xlsm-row-21-metropolitan-divisions",
+      "download_items": [
+        {
+          "url": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_us_metdiv_500k.zip",
+          "destination": "data-raw/census/2025/cartographic/metropolitan_divisions_500k/cb_2025_us_metdiv_500k.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Census cartographic direct URL candidate; validate with --verify-remote.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/cartographic/metropolitan_divisions_500k/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P2",
+      "Phase": "Display boundaries",
+      "Group": "US Census 2025 Cartographic",
+      "Dataset": "United States Outline",
+      "Specific file/layer": "US outline",
+      "Source URL": "https://www.census.gov/geographies/mapping-files/2025/geo/carto-boundary-file.html",
+      "Format": "Shapefile / KML",
+      "Use in PupWiki": "Lightweight national map visualizations and QA maps.",
+      "Recommended local path": "data-raw/census/2025/cartographic/us_outline_5m_or_20m/",
+      "Notes": "Use 5m/20m for display, not detailed joins.",
+      "source_row": 22,
+      "id": "xlsm-row-22-united-states-outline",
+      "download_items": [
+        {
+          "url": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_us_nation_5m.zip",
+          "destination": "data-raw/census/2025/cartographic/us_outline_5m_or_20m/cb_2025_us_nation_5m.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Census cartographic direct URL candidate; validate with --verify-remote.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/cartographic/us_outline_5m_or_20m/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_us_nation_20m.zip",
+          "destination": "data-raw/census/2025/cartographic/us_outline_5m_or_20m/cb_2025_us_nation_20m.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Census cartographic direct URL candidate; validate with --verify-remote.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/cartographic/us_outline_5m_or_20m/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 2,
+      "direct_item_count": 2
+    },
+    {
+      "Priority": "P2",
+      "Phase": "Special areas",
+      "Group": "US Census 2025 Cartographic",
+      "Dataset": "AIANNH Areas",
+      "Specific file/layer": "American Indian / Alaska Native / Native Hawaiian areas",
+      "Source URL": "https://www.census.gov/geographies/mapping-files/2025/geo/carto-boundary-file.html",
+      "Format": "Shapefile / KML",
+      "Use in PupWiki": "Adds correct geo context in tribal/AIANNH areas; useful for completeness and careful regional metadata.",
+      "Recommended local path": "data-raw/census/2025/cartographic/aiannh_500k/",
+      "Notes": "Not needed for first city MVP, but collect with boundary pack.",
+      "source_row": 23,
+      "id": "xlsm-row-23-aiannh-areas",
+      "download_items": [
+        {
+          "url": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_us_aiannh_500k.zip",
+          "destination": "data-raw/census/2025/cartographic/aiannh_500k/cb_2025_us_aiannh_500k.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Census cartographic direct URL candidate; validate with --verify-remote.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/cartographic/aiannh_500k/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P2",
+      "Phase": "Special areas",
+      "Group": "US Census 2025 Cartographic",
+      "Dataset": "Census Tracts",
+      "Specific file/layer": "Tract boundaries",
+      "Source URL": "https://www.census.gov/geographies/mapping-files/2025/geo/carto-boundary-file.html",
+      "Format": "Shapefile / KML",
+      "Use in PupWiki": "Micro-geographic analysis and future density scoring; not required for city/category pages.",
+      "Recommended local path": "data-raw/census/2025/cartographic/tracts_500k/",
+      "Notes": "Heavy; skip in first processing run if needed.",
+      "source_row": 24,
+      "id": "xlsm-row-24-census-tracts",
+      "download_items": [
+        {
+          "url": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_us_tract_500k.zip",
+          "destination": "data-raw/census/2025/cartographic/tracts_500k/cb_2025_us_tract_500k.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Census cartographic direct URL candidate; validate with --verify-remote.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/cartographic/tracts_500k/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P2",
+      "Phase": "Urban context",
+      "Group": "US Census 2020/2025",
+      "Dataset": "Urban Areas",
+      "Specific file/layer": "Urban area boundaries/gazetteer where available",
+      "Source URL": "https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.html",
+      "Format": "TXT / boundary files depending year",
+      "Use in PupWiki": "Urban/rural scoring and better city priority ranking.",
+      "Recommended local path": "data-raw/census/2025/gazetteer/urban_areas.txt",
+      "Notes": "Useful for SEO priority scoring.",
+      "source_row": 25,
+      "id": "xlsm-row-25-urban-areas",
+      "download_items": [
+        {
+          "url": "https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.html",
+          "destination": "data-raw/census/2025/gazetteer/_SOURCE_URL.txt",
+          "kind": "landing_page",
+          "default": false,
+          "large": false,
+          "notes": "Landing/source page from XLSM. Manual resolver may be needed.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": false
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 0
+    },
+    {
+      "Priority": "P2",
+      "Phase": "ZIP search",
+      "Group": "US Census 2025/2020",
+      "Dataset": "ZCTAs",
+      "Specific file/layer": "ZIP Code Tabulation Areas",
+      "Source URL": "https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.html",
+      "Format": "TXT / Shapefile",
+      "Use in PupWiki": "ZIP-like search, postcode fallback, near-me UX and local filtering.",
+      "Recommended local path": "data-raw/census/2025/gazetteer/zctas.txt",
+      "Notes": "Collect gazetteer first; boundaries later if needed.",
+      "source_row": 26,
+      "id": "xlsm-row-26-zctas",
+      "download_items": [
+        {
+          "url": "https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.html",
+          "destination": "data-raw/census/2025/gazetteer/_SOURCE_URL.txt",
+          "kind": "landing_page",
+          "default": false,
+          "large": false,
+          "notes": "Landing/source page from XLSM. Manual resolver may be needed.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": false
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 0
+    },
+    {
+      "Priority": "P2",
+      "Phase": "Gazetteer",
+      "Group": "US Census 2025 Gazetteer",
+      "Dataset": "ZCTAs Gazetteer",
+      "Specific file/layer": "ZCTA identifiers and representative lat/lon",
+      "Source URL": "https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.html",
+      "Format": "Pipe-delimited TXT",
+      "Use in PupWiki": "ZIP-like search and redirect to nearest city/category page.",
+      "Recommended local path": "data-raw/census/2025/gazetteer/zctas.txt",
+      "Notes": "Good search enhancement.",
+      "source_row": 27,
+      "id": "xlsm-row-27-zctas-gazetteer",
+      "download_items": [
+        {
+          "url": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2025_Gazetteer/2025_Gaz_zcta_national.zip",
+          "destination": "data-raw/census/2025/gazetteer/_downloads/2025_Gaz_zcta_national.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Census Gazetteer ZIP candidate; extract after download.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/gazetteer/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P2",
+      "Phase": "Gazetteer",
+      "Group": "US Census 2025 Gazetteer",
+      "Dataset": "School Districts Gazetteer",
+      "Specific file/layer": "Elementary / secondary / unified / administrative school districts",
+      "Source URL": "https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.html",
+      "Format": "Pipe-delimited TXT",
+      "Use in PupWiki": "Optional family/dog-parent content context; not needed for first maps release.",
+      "Recommended local path": "data-raw/census/2025/gazetteer/school_districts/",
+      "Notes": "Low direct POI value.",
+      "source_row": 28,
+      "id": "xlsm-row-28-school-districts-gazetteer",
+      "download_items": [
+        {
+          "url": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2025_Gazetteer/2025_Gaz_unsd_national.zip",
+          "destination": "data-raw/census/2025/gazetteer/_downloads/2025_Gaz_unsd_national.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Census Gazetteer ZIP candidate; extract after download.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/gazetteer/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2025_Gazetteer/2025_Gaz_elsd_national.zip",
+          "destination": "data-raw/census/2025/gazetteer/_downloads/2025_Gaz_elsd_national.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Census Gazetteer ZIP candidate; extract after download.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/gazetteer/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2025_Gazetteer/2025_Gaz_scsd_national.zip",
+          "destination": "data-raw/census/2025/gazetteer/_downloads/2025_Gaz_scsd_national.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Census Gazetteer ZIP candidate; extract after download.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/gazetteer/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 3,
+      "direct_item_count": 3
+    },
+    {
+      "Priority": "P2",
+      "Phase": "Legal boundaries",
+      "Group": "US Census 2025 TIGER/Line",
+      "Dataset": "State Shapefiles",
+      "Specific file/layer": "Legal state boundaries",
+      "Source URL": "https://www.census.gov/geo/maps-data/data/tiger-line.html",
+      "Format": "Shapefile",
+      "Use in PupWiki": "Validation/backstop when cartographic boundaries are too simplified.",
+      "Recommended local path": "data-raw/census/2025/tigerline/state/",
+      "Notes": "Use only if 500k cartographic is not accurate enough.",
+      "source_row": 29,
+      "id": "xlsm-row-29-state-shapefiles",
+      "download_items": [
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/STATE/tl_2025_us_state.zip",
+          "destination": "data-raw/census/2025/tigerline/state/tl_2025_us_state.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/state/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P2",
+      "Phase": "Legal boundaries",
+      "Group": "US Census 2025 TIGER/Line",
+      "Dataset": "County Shapefiles",
+      "Specific file/layer": "Legal county boundaries",
+      "Source URL": "https://www.census.gov/geo/maps-data/data/tiger-line.html",
+      "Format": "Shapefile",
+      "Use in PupWiki": "Higher precision county fallback and QA.",
+      "Recommended local path": "data-raw/census/2025/tigerline/county/",
+      "Notes": "Optional for MVP.",
+      "source_row": 30,
+      "id": "xlsm-row-30-county-shapefiles",
+      "download_items": [
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUNTY/tl_2025_us_county.zip",
+          "destination": "data-raw/census/2025/tigerline/county/tl_2025_us_county.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/county/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P2",
+      "Phase": "Legal boundaries",
+      "Group": "US Census 2025 TIGER/Line",
+      "Dataset": "Place Shapefiles",
+      "Specific file/layer": "Legal place boundaries",
+      "Source URL": "https://www.census.gov/geo/maps-data/data/tiger-line.html",
+      "Format": "Shapefile",
+      "Use in PupWiki": "Higher precision city/place spatial join where simplified cartographic boundaries fail.",
+      "Recommended local path": "data-raw/census/2025/tigerline/place/",
+      "Notes": "Optional, useful for QA.",
+      "source_row": 31,
+      "id": "xlsm-row-31-place-shapefiles",
+      "download_items": [
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_01_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/01_alabama/tl_2025_01_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/01_alabama/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_02_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/02_alaska/tl_2025_02_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/02_alaska/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_04_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/04_arizona/tl_2025_04_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/04_arizona/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_05_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/05_arkansas/tl_2025_05_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/05_arkansas/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_06_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/06_california/tl_2025_06_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/06_california/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_08_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/08_colorado/tl_2025_08_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/08_colorado/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_09_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/09_connecticut/tl_2025_09_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/09_connecticut/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_10_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/10_delaware/tl_2025_10_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/10_delaware/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_11_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/11_district-of-columbia/tl_2025_11_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/11_district-of-columbia/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_12_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/12_florida/tl_2025_12_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/12_florida/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_13_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/13_georgia/tl_2025_13_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/13_georgia/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_15_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/15_hawaii/tl_2025_15_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/15_hawaii/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_16_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/16_idaho/tl_2025_16_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/16_idaho/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_17_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/17_illinois/tl_2025_17_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/17_illinois/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_18_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/18_indiana/tl_2025_18_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/18_indiana/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_19_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/19_iowa/tl_2025_19_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/19_iowa/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_20_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/20_kansas/tl_2025_20_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/20_kansas/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_21_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/21_kentucky/tl_2025_21_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/21_kentucky/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_22_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/22_louisiana/tl_2025_22_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/22_louisiana/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_23_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/23_maine/tl_2025_23_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/23_maine/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_24_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/24_maryland/tl_2025_24_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/24_maryland/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_25_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/25_massachusetts/tl_2025_25_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/25_massachusetts/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_26_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/26_michigan/tl_2025_26_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/26_michigan/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_27_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/27_minnesota/tl_2025_27_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/27_minnesota/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_28_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/28_mississippi/tl_2025_28_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/28_mississippi/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_29_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/29_missouri/tl_2025_29_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/29_missouri/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_30_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/30_montana/tl_2025_30_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/30_montana/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_31_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/31_nebraska/tl_2025_31_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/31_nebraska/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_32_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/32_nevada/tl_2025_32_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/32_nevada/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_33_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/33_new-hampshire/tl_2025_33_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/33_new-hampshire/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_34_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/34_new-jersey/tl_2025_34_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/34_new-jersey/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_35_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/35_new-mexico/tl_2025_35_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/35_new-mexico/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_36_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/36_new-york/tl_2025_36_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/36_new-york/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_37_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/37_north-carolina/tl_2025_37_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/37_north-carolina/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_38_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/38_north-dakota/tl_2025_38_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/38_north-dakota/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_39_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/39_ohio/tl_2025_39_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/39_ohio/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_40_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/40_oklahoma/tl_2025_40_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/40_oklahoma/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_41_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/41_oregon/tl_2025_41_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/41_oregon/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_42_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/42_pennsylvania/tl_2025_42_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/42_pennsylvania/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_44_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/44_rhode-island/tl_2025_44_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/44_rhode-island/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_45_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/45_south-carolina/tl_2025_45_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/45_south-carolina/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_46_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/46_south-dakota/tl_2025_46_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/46_south-dakota/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_47_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/47_tennessee/tl_2025_47_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/47_tennessee/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_48_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/48_texas/tl_2025_48_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/48_texas/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_49_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/49_utah/tl_2025_49_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/49_utah/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_50_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/50_vermont/tl_2025_50_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/50_vermont/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_51_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/51_virginia/tl_2025_51_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/51_virginia/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_53_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/53_washington/tl_2025_53_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/53_washington/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_54_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/54_west-virginia/tl_2025_54_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/54_west-virginia/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_55_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/55_wisconsin/tl_2025_55_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/55_wisconsin/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_56_place.zip",
+          "destination": "data-raw/census/2025/tigerline/place/56_wyoming/tl_2025_56_place.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level PLACE layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/place/56_wyoming/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 51,
+      "direct_item_count": 51
+    },
+    {
+      "Priority": "P2",
+      "Phase": "Legal boundaries",
+      "Group": "US Census 2025 TIGER/Line",
+      "Dataset": "County Subdivision Shapefiles",
+      "Specific file/layer": "COUSUB legal boundaries",
+      "Source URL": "https://www.census.gov/geo/maps-data/data/tiger-line.html",
+      "Format": "Shapefile",
+      "Use in PupWiki": "Township/town mapping and fallback in subdivision-heavy states.",
+      "Recommended local path": "data-raw/census/2025/tigerline/cousub/",
+      "Notes": "Optional.",
+      "source_row": 32,
+      "id": "xlsm-row-32-county-subdivision-shapefiles",
+      "download_items": [
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_01_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/01_alabama/tl_2025_01_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/01_alabama/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_02_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/02_alaska/tl_2025_02_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/02_alaska/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_04_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/04_arizona/tl_2025_04_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/04_arizona/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_05_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/05_arkansas/tl_2025_05_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/05_arkansas/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_06_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/06_california/tl_2025_06_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/06_california/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_08_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/08_colorado/tl_2025_08_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/08_colorado/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_09_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/09_connecticut/tl_2025_09_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/09_connecticut/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_10_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/10_delaware/tl_2025_10_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/10_delaware/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_11_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/11_district-of-columbia/tl_2025_11_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/11_district-of-columbia/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_12_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/12_florida/tl_2025_12_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/12_florida/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_13_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/13_georgia/tl_2025_13_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/13_georgia/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_15_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/15_hawaii/tl_2025_15_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/15_hawaii/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_16_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/16_idaho/tl_2025_16_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/16_idaho/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_17_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/17_illinois/tl_2025_17_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/17_illinois/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_18_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/18_indiana/tl_2025_18_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/18_indiana/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_19_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/19_iowa/tl_2025_19_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/19_iowa/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_20_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/20_kansas/tl_2025_20_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/20_kansas/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_21_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/21_kentucky/tl_2025_21_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/21_kentucky/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_22_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/22_louisiana/tl_2025_22_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/22_louisiana/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_23_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/23_maine/tl_2025_23_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/23_maine/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_24_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/24_maryland/tl_2025_24_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/24_maryland/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_25_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/25_massachusetts/tl_2025_25_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/25_massachusetts/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_26_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/26_michigan/tl_2025_26_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/26_michigan/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_27_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/27_minnesota/tl_2025_27_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/27_minnesota/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_28_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/28_mississippi/tl_2025_28_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/28_mississippi/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_29_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/29_missouri/tl_2025_29_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/29_missouri/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_30_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/30_montana/tl_2025_30_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/30_montana/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_31_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/31_nebraska/tl_2025_31_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/31_nebraska/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_32_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/32_nevada/tl_2025_32_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/32_nevada/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_33_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/33_new-hampshire/tl_2025_33_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/33_new-hampshire/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_34_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/34_new-jersey/tl_2025_34_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/34_new-jersey/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_35_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/35_new-mexico/tl_2025_35_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/35_new-mexico/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_36_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/36_new-york/tl_2025_36_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/36_new-york/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_37_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/37_north-carolina/tl_2025_37_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/37_north-carolina/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_38_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/38_north-dakota/tl_2025_38_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/38_north-dakota/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_39_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/39_ohio/tl_2025_39_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/39_ohio/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_40_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/40_oklahoma/tl_2025_40_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/40_oklahoma/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_41_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/41_oregon/tl_2025_41_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/41_oregon/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_42_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/42_pennsylvania/tl_2025_42_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/42_pennsylvania/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_44_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/44_rhode-island/tl_2025_44_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/44_rhode-island/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_45_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/45_south-carolina/tl_2025_45_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/45_south-carolina/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_46_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/46_south-dakota/tl_2025_46_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/46_south-dakota/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_47_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/47_tennessee/tl_2025_47_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/47_tennessee/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_48_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/48_texas/tl_2025_48_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/48_texas/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_49_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/49_utah/tl_2025_49_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/49_utah/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_50_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/50_vermont/tl_2025_50_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/50_vermont/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_51_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/51_virginia/tl_2025_51_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/51_virginia/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_53_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/53_washington/tl_2025_53_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/53_washington/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_54_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/54_west-virginia/tl_2025_54_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/54_west-virginia/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_55_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/55_wisconsin/tl_2025_55_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/55_wisconsin/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_56_cousub.zip",
+          "destination": "data-raw/census/2025/tigerline/cousub/56_wyoming/tl_2025_56_cousub.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State-level COUSUB layer; enable with --include-state-layers.",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cousub/56_wyoming/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 51,
+      "direct_item_count": 51
+    },
+    {
+      "Priority": "P2",
+      "Phase": "Legal boundaries",
+      "Group": "US Census 2025 TIGER/Line",
+      "Dataset": "CBSA Shapefiles",
+      "Specific file/layer": "Metro/micro legal/statistical boundaries",
+      "Source URL": "https://www.census.gov/geo/maps-data/data/tiger-line.html",
+      "Format": "Shapefile",
+      "Use in PupWiki": "Metro enrichment and metro page QA.",
+      "Recommended local path": "data-raw/census/2025/tigerline/cbsa/",
+      "Notes": "Optional if using cartographic CBSA.",
+      "source_row": 33,
+      "id": "xlsm-row-33-cbsa-shapefiles",
+      "download_items": [
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/CBSA/tl_2025_us_cbsa.zip",
+          "destination": "data-raw/census/2025/tigerline/cbsa/tl_2025_us_cbsa.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/cbsa/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P2",
+      "Phase": "ZIP boundaries",
+      "Group": "US Census 2025 TIGER/Line",
+      "Dataset": "ZCTA Shapefiles",
+      "Specific file/layer": "ZCTA polygons",
+      "Source URL": "https://www.census.gov/geo/maps-data/data/tiger-line.html",
+      "Format": "Shapefile",
+      "Use in PupWiki": "Postcode polygon lookup and zip-to-city fallback.",
+      "Recommended local path": "data-raw/census/2025/tigerline/zcta/",
+      "Notes": "Later if ZIP UX matters.",
+      "source_row": 34,
+      "id": "xlsm-row-34-zcta-shapefiles",
+      "download_items": [
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/ZCTA520/tl_2025_us_zcta520.zip",
+          "destination": "data-raw/census/2025/tigerline/zcta/tl_2025_us_zcta520.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "",
+          "requires_env": null,
+          "extract_to": "data-raw/census/2025/tigerline/zcta/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P2",
+      "Phase": "OSM source",
+      "Group": "Geofabrik",
+      "Dataset": "Polygon files",
+      "Specific file/layer": ".poly region boundaries",
+      "Source URL": "https://download.geofabrik.de/north-america/us.html",
+      "Format": ".poly",
+      "Use in PupWiki": "Clipping, regional ETL and QA of PBF subsets.",
+      "Recommended local path": "data-raw/osm/geofabrik/poly/",
+      "Notes": "Useful for osmium tools.",
+      "source_row": 35,
+      "id": "xlsm-row-35-polygon-files",
+      "download_items": [
+        {
+          "url": "https://download.geofabrik.de/north-america/us.poly",
+          "destination": "data-raw/osm/geofabrik/poly/us.poly",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Full-US polygon candidate.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/california.poly",
+          "destination": "data-raw/osm/geofabrik/poly/california.poly",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State .poly candidate; enable optional/state layers.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/texas.poly",
+          "destination": "data-raw/osm/geofabrik/poly/texas.poly",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State .poly candidate; enable optional/state layers.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/florida.poly",
+          "destination": "data-raw/osm/geofabrik/poly/florida.poly",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State .poly candidate; enable optional/state layers.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/new-york.poly",
+          "destination": "data-raw/osm/geofabrik/poly/new-york.poly",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State .poly candidate; enable optional/state layers.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/pennsylvania.poly",
+          "destination": "data-raw/osm/geofabrik/poly/pennsylvania.poly",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State .poly candidate; enable optional/state layers.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/illinois.poly",
+          "destination": "data-raw/osm/geofabrik/poly/illinois.poly",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State .poly candidate; enable optional/state layers.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/ohio.poly",
+          "destination": "data-raw/osm/geofabrik/poly/ohio.poly",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State .poly candidate; enable optional/state layers.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/georgia.poly",
+          "destination": "data-raw/osm/geofabrik/poly/georgia.poly",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State .poly candidate; enable optional/state layers.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/north-carolina.poly",
+          "destination": "data-raw/osm/geofabrik/poly/north-carolina.poly",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State .poly candidate; enable optional/state layers.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/michigan.poly",
+          "destination": "data-raw/osm/geofabrik/poly/michigan.poly",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State .poly candidate; enable optional/state layers.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/new-jersey.poly",
+          "destination": "data-raw/osm/geofabrik/poly/new-jersey.poly",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State .poly candidate; enable optional/state layers.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/virginia.poly",
+          "destination": "data-raw/osm/geofabrik/poly/virginia.poly",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State .poly candidate; enable optional/state layers.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/washington.poly",
+          "destination": "data-raw/osm/geofabrik/poly/washington.poly",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State .poly candidate; enable optional/state layers.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/arizona.poly",
+          "destination": "data-raw/osm/geofabrik/poly/arizona.poly",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State .poly candidate; enable optional/state layers.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://download.geofabrik.de/north-america/us/massachusetts.poly",
+          "destination": "data-raw/osm/geofabrik/poly/massachusetts.poly",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "State .poly candidate; enable optional/state layers.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 16,
+      "direct_item_count": 16
+    },
+    {
+      "Priority": "P2",
+      "Phase": "OSM updates",
+      "Group": "Geofabrik",
+      "Dataset": "Change files",
+      "Specific file/layer": "Incremental updates",
+      "Source URL": "https://download.geofabrik.de/north-america/us.html",
+      "Format": ".osc.gz",
+      "Use in PupWiki": "Later monthly/weekly incremental refresh instead of full rebuild.",
+      "Recommended local path": "data-raw/osm/geofabrik/updates/",
+      "Notes": "Add after pipeline is stable.",
+      "source_row": 36,
+      "id": "xlsm-row-36-change-files",
+      "download_items": [
+        {
+          "url": "https://download.geofabrik.de/north-america/us-updates/",
+          "destination": "data-raw/osm/geofabrik/updates/_SOURCE_URL.txt",
+          "kind": "landing_page",
+          "default": false,
+          "large": false,
+          "notes": "Replication folder; not a single file.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 0
+    },
+    {
+      "Priority": "P2",
+      "Phase": "Names/aliases",
+      "Group": "USGS GNIS",
+      "Dataset": "GNIS Domestic Names — All Names",
+      "Specific file/layer": "Official/variant names for US features",
+      "Source URL": "https://www.usgs.gov/us-board-on-geographic-names/download-gnis-data",
+      "Format": "TXT / GPKG / GDB",
+      "Use in PupWiki": "Aliases, rural/unincorporated places, parks/water feature names and search enrichment.",
+      "Recommended local path": "data-raw/usgs/gnis/domestic_names/",
+      "Notes": "Great for search aliases.",
+      "source_row": 37,
+      "id": "xlsm-row-37-gnis-domestic-names-all-names",
+      "download_items": [
+        {
+          "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/GeographicNames/DomesticNames/DomesticNames_National.zip",
+          "destination": "data-raw/usgs/gnis/domestic_names/DomesticNames_National.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "GNIS national domestic names candidate ZIP.",
+          "requires_env": null,
+          "extract_to": "data-raw/usgs/gnis/domestic_names/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P2",
+      "Phase": "Names/aliases",
+      "Group": "USGS GNIS",
+      "Dataset": "GNIS Populated Places",
+      "Specific file/layer": "Populated place names and coordinates",
+      "Source URL": "https://www.usgs.gov/us-board-on-geographic-names/domestic-names",
+      "Format": "TXT / GPKG / GDB",
+      "Use in PupWiki": "Rural and unincorporated place fallback; improves search and nearby city logic.",
+      "Recommended local path": "data-raw/usgs/gnis/populated_places/",
+      "Notes": "Use as point-based gazetteer, not boundary source.",
+      "source_row": 38,
+      "id": "xlsm-row-38-gnis-populated-places",
+      "download_items": [
+        {
+          "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/GeographicNames/DomesticNames/DomesticNames_National.zip",
+          "destination": "data-raw/usgs/gnis/domestic_names/DomesticNames_National.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "GNIS national domestic names candidate ZIP.",
+          "requires_env": null,
+          "extract_to": "data-raw/usgs/gnis/domestic_names/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P2",
+      "Phase": "Names/aliases",
+      "Group": "USGS GNIS",
+      "Dataset": "GNIS Feature Classes",
+      "Specific file/layer": "Parks, lakes, beaches, streams, locales",
+      "Source URL": "https://www.usgs.gov/us-board-on-geographic-names/download-gnis-data",
+      "Format": "TXT / GPKG / GDB",
+      "Use in PupWiki": "Outdoor/recreation enrichment and place-name aliases for dog parks/beaches/trails.",
+      "Recommended local path": "data-raw/usgs/gnis/feature_classes/",
+      "Notes": "Use selectively.",
+      "source_row": 39,
+      "id": "xlsm-row-39-gnis-feature-classes",
+      "download_items": [
+        {
+          "url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/GeographicNames/DomesticNames/DomesticNames_National.zip",
+          "destination": "data-raw/usgs/gnis/domestic_names/DomesticNames_National.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "GNIS national domestic names candidate ZIP.",
+          "requires_env": null,
+          "extract_to": "data-raw/usgs/gnis/domestic_names/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P2",
+      "Phase": "Place identity",
+      "Group": "Who’s On First",
+      "Dataset": "US Admin Data",
+      "Specific file/layer": "Country/region/county/locality/neighbourhood hierarchy",
+      "Source URL": "https://www.whosonfirst.org/download/",
+      "Format": "SQLite / Shapefile / GeoJSON bundle",
+      "Use in PupWiki": "Stable place IDs, aliases, hierarchy and neighbourhood metadata.",
+      "Recommended local path": "data-raw/whosonfirst/admin-us/",
+      "Notes": "Good complement to Census, not replacement.",
+      "source_row": 40,
+      "id": "xlsm-row-40-us-admin-data",
+      "download_items": [
+        {
+          "url": "https://www.whosonfirst.org/download/",
+          "destination": "data-raw/whosonfirst/admin-us/_SOURCE_URL.txt",
+          "kind": "landing_page",
+          "default": false,
+          "large": false,
+          "notes": "Landing/source page from XLSM. Manual resolver may be needed.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": false
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 0
+    },
+    {
+      "Priority": "P2",
+      "Phase": "Place identity",
+      "Group": "Who’s On First",
+      "Dataset": "whosonfirst-data-admin-us",
+      "Specific file/layer": "Raw US admin GeoJSON repo",
+      "Source URL": "https://github.com/whosonfirst-data/whosonfirst-data-admin-us",
+      "Format": "GeoJSON repository / bundle",
+      "Use in PupWiki": "US localities/neighbourhoods and alternate naming/parent hierarchy.",
+      "Recommended local path": "data-raw/whosonfirst/admin-us-geojson/",
+      "Notes": "Use if you prefer raw GeoJSON over SQLite.",
+      "source_row": 41,
+      "id": "xlsm-row-41-whosonfirst-data-admin-us",
+      "download_items": [
+        {
+          "url": "https://github.com/whosonfirst-data/whosonfirst-data-admin-us",
+          "destination": "data-raw/whosonfirst/admin-us-geojson/_SOURCE_URL.txt",
+          "kind": "landing_page",
+          "default": false,
+          "large": false,
+          "notes": "Landing/source page from XLSM. Manual resolver may be needed.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": false
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 0
+    },
+    {
+      "Priority": "P2",
+      "Phase": "Scoring",
+      "Group": "Census ACS 2024 5-Year",
+      "Dataset": "Data Profiles",
+      "Specific file/layer": "ACS profile API",
+      "Source URL": "https://api.census.gov/data/2024/acs/acs5/profile",
+      "Format": "API / JSON / CSV",
+      "Use in PupWiki": "Simpler demographic/housing/economic context for SEO scoring.",
+      "Recommended local path": "data-raw/census/2024/acs5/profile/",
+      "Notes": "Easier than detailed tables for first scoring pass.",
+      "source_row": 42,
+      "id": "xlsm-row-42-data-profiles",
+      "download_items": [
+        {
+          "url": "https://api.census.gov/data/2024/acs/acs5/profile?get=NAME,DP05_0001E&for=place:*",
+          "destination": "data-raw/census/2024/acs5/profile/place_profile_population.json",
+          "kind": "api_json",
+          "default": false,
+          "large": false,
+          "notes": "Optional ACS profile query.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P2",
+      "Phase": "Scoring",
+      "Group": "Census ACS 2024 5-Year",
+      "Dataset": "Subject Tables",
+      "Specific file/layer": "ACS subject table API",
+      "Source URL": "https://api.census.gov/data/2024/acs/acs5/subject",
+      "Format": "API / JSON / CSV",
+      "Use in PupWiki": "Optional family/housing context for dog-parent content.",
+      "Recommended local path": "data-raw/census/2024/acs5/subject/",
+      "Notes": "Later.",
+      "source_row": 43,
+      "id": "xlsm-row-43-subject-tables",
+      "download_items": [
+        {
+          "url": "https://api.census.gov/data/2024/acs/acs5/subject?get=NAME,S0101_C01_001E&for=place:*",
+          "destination": "data-raw/census/2024/acs5/subject/place_subject_population.json",
+          "kind": "api_json",
+          "default": false,
+          "large": false,
+          "notes": "Optional ACS subject query.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P2",
+      "Phase": "Business POI enrichment",
+      "Group": "AllThePlaces",
+      "Dataset": "Latest download",
+      "Specific file/layer": "All spiders output",
+      "Source URL": "https://alltheplaces.xyz/",
+      "Format": "gzipped NDJSON; each line GeoJSON feature",
+      "Use in PupWiki": "Chain/business enrichment for pet retail, pet stores, grooming, hotels, etc.",
+      "Recommended local path": "data-raw/alltheplaces/latest/output.ndjson.gz",
+      "Notes": "Deduplicate against OSM.",
+      "source_row": 44,
+      "id": "xlsm-row-44-latest-download",
+      "download_items": [
+        {
+          "url": "https://data.alltheplaces.xyz/runs/latest/output.ndjson.gz",
+          "destination": "data-raw/alltheplaces/latest/output.ndjson.gz",
+          "kind": "file",
+          "default": true,
+          "large": true,
+          "notes": "ATP latest output candidate; verify remotely.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P2",
+      "Phase": "Business POI enrichment",
+      "Group": "AllThePlaces",
+      "Dataset": "Brand mappings / spider metadata",
+      "Specific file/layer": "Spider/brand source metadata",
+      "Source URL": "https://alltheplaces.xyz/",
+      "Format": "NDJSON / metadata",
+      "Use in PupWiki": "Brand detection, chain grouping and source-specific trust scoring.",
+      "Recommended local path": "data-raw/alltheplaces/latest/metadata/",
+      "Notes": "Useful for Petco/PetSmart/Tractor Supply style enrichment.",
+      "source_row": 45,
+      "id": "xlsm-row-45-brand-mappings-spider-metadata",
+      "download_items": [
+        {
+          "url": "https://data.alltheplaces.xyz/runs/latest/spiders.json",
+          "destination": "data-raw/alltheplaces/latest/metadata/spiders.json",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "ATP metadata candidate; verify remotely.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P3",
+      "Phase": "Transport/context",
+      "Group": "US Census 2025 TIGER/Line",
+      "Dataset": "Roads",
+      "Specific file/layer": "Road centerlines",
+      "Source URL": "https://www.census.gov/geo/maps-data/data/tiger-line.html",
+      "Format": "Shapefile",
+      "Use in PupWiki": "Optional proximity/routing context; OSM roads may be more useful.",
+      "Recommended local path": "data-raw/census/2025/tigerline/roads/",
+      "Notes": "Not needed initially.",
+      "source_row": 46,
+      "id": "xlsm-row-46-roads",
+      "download_items": [
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_01_roads.zip",
+          "destination": "data-raw/census/2025/tigerline/roads/01_alabama/tl_2025_01_roads.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "Template only; roads are heavy and county/state partitioned.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P3",
+      "Phase": "Water/context",
+      "Group": "US Census 2025 TIGER/Line",
+      "Dataset": "Area Water / Linear Water",
+      "Specific file/layer": "Water features",
+      "Source URL": "https://www.census.gov/geo/maps-data/data/tiger-line.html",
+      "Format": "Shapefile",
+      "Use in PupWiki": "Water-near-dog-parks enrichment and QA context.",
+      "Recommended local path": "data-raw/census/2025/tigerline/water/",
+      "Notes": "Optional; USGS hydrography is richer.",
+      "source_row": 47,
+      "id": "xlsm-row-47-area-water-linear-water",
+      "download_items": [
+        {
+          "url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_01001_areawater.zip",
+          "destination": "data-raw/census/2025/tigerline/water/example/tl_2025_01001_areawater.zip",
+          "kind": "file",
+          "default": false,
+          "large": false,
+          "notes": "Template only; water files are county-partitioned.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P3",
+      "Phase": "Place identity",
+      "Group": "Who’s On First",
+      "Dataset": "US venue repositories",
+      "Specific file/layer": "Venue data split by state",
+      "Source URL": "https://github.com/whosonfirst-data",
+      "Format": "GeoJSON repositories",
+      "Use in PupWiki": "Optional legacy venue enrichment; usually prefer OSM/AllThePlaces for POIs.",
+      "Recommended local path": "data-raw/whosonfirst/venues-us/",
+      "Notes": "Large; not MVP.",
+      "source_row": 48,
+      "id": "xlsm-row-48-us-venue-repositories",
+      "download_items": [
+        {
+          "url": "https://github.com/whosonfirst-data",
+          "destination": "data-raw/whosonfirst/venues-us/_SOURCE_URL.txt",
+          "kind": "landing_page",
+          "default": false,
+          "large": false,
+          "notes": "Landing/source page from XLSM. Manual resolver may be needed.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": false
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 0
+    },
+    {
+      "Priority": "P3",
+      "Phase": "Address enrichment",
+      "Group": "OpenAddresses",
+      "Dataset": "US address sources",
+      "Specific file/layer": "Open address datasets",
+      "Source URL": "https://openaddresses.io/",
+      "Format": "CSV / source-specific archives",
+      "Use in PupWiki": "Address validation, postcode cleanup, deduping and future geocoding quality.",
+      "Recommended local path": "data-raw/openaddresses/us/",
+      "Notes": "Later; can be very large.",
+      "source_row": 49,
+      "id": "xlsm-row-49-us-address-sources",
+      "download_items": [
+        {
+          "url": "https://openaddresses.io/",
+          "destination": "data-raw/openaddresses/us/_SOURCE_URL.txt",
+          "kind": "landing_page",
+          "default": false,
+          "large": false,
+          "notes": "Landing/source page from XLSM. Manual resolver may be needed.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": false
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 0
+    },
+    {
+      "Priority": "P3",
+      "Phase": "Parks/travel",
+      "Group": "NPS Data API",
+      "Dataset": "Parks",
+      "Specific file/layer": "Official NPS park metadata",
+      "Source URL": "https://www.nps.gov/subjects/digital/nps-data-api.htm",
+      "Format": "API JSON",
+      "Use in PupWiki": "National parks travel/recreation pages and official park context.",
+      "Recommended local path": "data-raw/nps/parks.json",
+      "Notes": "Dog policy must be verified separately.",
+      "source_row": 50,
+      "id": "xlsm-row-50-parks",
+      "download_items": [
+        {
+          "url": "https://developer.nps.gov/api/v1/parks?limit=500&api_key=${NPS_API_KEY}",
+          "destination": "data-raw/nps/parks.json",
+          "kind": "api_json",
+          "default": false,
+          "large": false,
+          "notes": "Requires NPS_API_KEY env var.",
+          "requires_env": "NPS_API_KEY",
+          "extract_to": null,
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P3",
+      "Phase": "Camping/travel",
+      "Group": "NPS Data API",
+      "Dataset": "Campgrounds",
+      "Specific file/layer": "Campground locations, amenities, fees and accessibility",
+      "Source URL": "https://www.nps.gov/subjects/digital/nps-data-api.htm",
+      "Format": "API JSON",
+      "Use in PupWiki": "Campground enrichment for dog-friendly travel pages.",
+      "Recommended local path": "data-raw/nps/campgrounds.json",
+      "Notes": "Do not assume dog-friendly unless explicitly sourced.",
+      "source_row": 51,
+      "id": "xlsm-row-51-campgrounds",
+      "download_items": [
+        {
+          "url": "https://developer.nps.gov/api/v1/campgrounds?limit=1000&api_key=${NPS_API_KEY}",
+          "destination": "data-raw/nps/campgrounds.json",
+          "kind": "api_json",
+          "default": false,
+          "large": false,
+          "notes": "Requires NPS_API_KEY env var.",
+          "requires_env": "NPS_API_KEY",
+          "extract_to": null,
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 1
+    },
+    {
+      "Priority": "P3",
+      "Phase": "Parks/travel",
+      "Group": "NPS Data API",
+      "Dataset": "Alerts / operating hours / fees / amenities",
+      "Specific file/layer": "Operational metadata",
+      "Source URL": "https://www.nps.gov/subjects/digital/nps-data-api.htm",
+      "Format": "API JSON",
+      "Use in PupWiki": "Travel-page enrichment and safety updates if integrated later.",
+      "Recommended local path": "data-raw/nps/operations/",
+      "Notes": "Not required for map MVP.",
+      "source_row": 52,
+      "id": "xlsm-row-52-alerts-operating-hours-fees-amenities",
+      "download_items": [
+        {
+          "url": "https://www.nps.gov/subjects/digital/nps-data-api.htm",
+          "destination": "data-raw/nps/operations/_SOURCE_URL.txt",
+          "kind": "landing_page",
+          "default": false,
+          "large": false,
+          "notes": "Landing/source page from XLSM. Manual resolver may be needed.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": false
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 0
+    },
+    {
+      "Priority": "P3",
+      "Phase": "Camping/recreation",
+      "Group": "Recreation.gov / RIDB",
+      "Dataset": "Recreation Areas",
+      "Specific file/layer": "Federal recreation area metadata",
+      "Source URL": "https://www.recreation.gov/use-our-data",
+      "Format": "API JSON",
+      "Use in PupWiki": "Federal recreation areas/campgrounds/facilities enrichment.",
+      "Recommended local path": "data-raw/recreationgov/ridb/recreation_areas/",
+      "Notes": "Credit Recreation.gov where used.",
+      "source_row": 53,
+      "id": "xlsm-row-53-recreation-areas",
+      "download_items": [
+        {
+          "url": "https://www.recreation.gov/use-our-data",
+          "destination": "data-raw/recreationgov/ridb/recreation_areas/_SOURCE_URL.txt",
+          "kind": "landing_page",
+          "default": false,
+          "large": false,
+          "notes": "Landing/source page from XLSM. Manual resolver may be needed.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": false
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 0
+    },
+    {
+      "Priority": "P3",
+      "Phase": "Camping/recreation",
+      "Group": "Recreation.gov / RIDB",
+      "Dataset": "Facilities / Campgrounds / Campsites",
+      "Specific file/layer": "Facility and campsite metadata",
+      "Source URL": "https://agdatacommons.nal.usda.gov/articles/dataset/Recreation_Information_Database_RIDB_/24661806",
+      "Format": "API JSON",
+      "Use in PupWiki": "Campground/facility enrichment for dog travel pages.",
+      "Recommended local path": "data-raw/recreationgov/ridb/facilities/",
+      "Notes": "Data may be incomplete; verify dog rules.",
+      "source_row": 54,
+      "id": "xlsm-row-54-facilities-campgrounds-campsites",
+      "download_items": [
+        {
+          "url": "https://agdatacommons.nal.usda.gov/articles/dataset/Recreation_Information_Database_RIDB_/24661806",
+          "destination": "data-raw/recreationgov/ridb/facilities/_SOURCE_URL.txt",
+          "kind": "landing_page",
+          "default": false,
+          "large": false,
+          "notes": "Landing/source page from XLSM. Manual resolver may be needed.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": false
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 0
+    },
+    {
+      "Priority": "P3",
+      "Phase": "Protected lands",
+      "Group": "USGS PAD-US",
+      "Dataset": "PAD-US national geodatabase",
+      "Specific file/layer": "Protected Areas Database national download",
+      "Source URL": "https://www.usgs.gov/programs/gap-analysis-project/science/pad-us-data-download",
+      "Format": "ArcGIS Geodatabase",
+      "Use in PupWiki": "Public/protected lands, park ownership/management and outdoor context.",
+      "Recommended local path": "data-raw/usgs/pad-us/national/",
+      "Notes": "Useful for outdoor/trail/beach enrichment.",
+      "source_row": 55,
+      "id": "xlsm-row-55-pad-us-national-geodatabase",
+      "download_items": [
+        {
+          "url": "https://www.usgs.gov/programs/gap-analysis-project/science/pad-us-data-download",
+          "destination": "data-raw/usgs/pad-us/national/_SOURCE_URL.txt",
+          "kind": "landing_page",
+          "default": false,
+          "large": false,
+          "notes": "Landing/source page from XLSM. Manual resolver may be needed.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": false
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 0
+    },
+    {
+      "Priority": "P3",
+      "Phase": "Protected lands",
+      "Group": "USGS PAD-US",
+      "Dataset": "PAD-US state/territory downloads",
+      "Specific file/layer": "State/territory protected area files",
+      "Source URL": "https://www.usgs.gov/programs/gap-analysis-project/science/pad-us-data-download",
+      "Format": "ArcGIS Geodatabase",
+      "Use in PupWiki": "State-level processing and smaller protected land jobs.",
+      "Recommended local path": "data-raw/usgs/pad-us/states/",
+      "Notes": "Use for state MVPs.",
+      "source_row": 56,
+      "id": "xlsm-row-56-pad-us-state-territory-downloads",
+      "download_items": [
+        {
+          "url": "https://www.usgs.gov/programs/gap-analysis-project/science/pad-us-data-download",
+          "destination": "data-raw/usgs/pad-us/states/_SOURCE_URL.txt",
+          "kind": "landing_page",
+          "default": false,
+          "large": false,
+          "notes": "Landing/source page from XLSM. Manual resolver may be needed.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": false
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 0
+    },
+    {
+      "Priority": "P3",
+      "Phase": "Hydrography",
+      "Group": "USGS Hydrography",
+      "Dataset": "National Hydrography Dataset / 3DHP",
+      "Specific file/layer": "Surface water features",
+      "Source URL": "https://www.usgs.gov/index.php/national-hydrography/national-hydrography-dataset",
+      "Format": "File geodatabase / shapefile",
+      "Use in PupWiki": "Water near dog parks, dog beaches, lake/stream enrichment.",
+      "Recommended local path": "data-raw/usgs/hydrography/",
+      "Notes": "NHD is retired but still available; USGS points to 3DHP for current data.",
+      "source_row": 57,
+      "id": "xlsm-row-57-national-hydrography-dataset-3dhp",
+      "download_items": [
+        {
+          "url": "https://www.usgs.gov/index.php/national-hydrography/national-hydrography-dataset",
+          "destination": "data-raw/usgs/hydrography/_SOURCE_URL.txt",
+          "kind": "landing_page",
+          "default": false,
+          "large": false,
+          "notes": "Landing/source page from XLSM. Manual resolver may be needed.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": false
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 0
+    },
+    {
+      "Priority": "P3",
+      "Phase": "Base maps",
+      "Group": "Natural Earth",
+      "Dataset": "Admin layers",
+      "Specific file/layer": "Countries/states/admin boundaries",
+      "Source URL": "https://www.naturalearthdata.com/",
+      "Format": "Shapefile / GeoJSON",
+      "Use in PupWiki": "Lightweight editorial/base maps and QA visualizations.",
+      "Recommended local path": "data-raw/naturalearth/admin/",
+      "Notes": "Public domain; not precise enough for city joins.",
+      "source_row": 58,
+      "id": "xlsm-row-58-admin-layers",
+      "download_items": [
+        {
+          "url": "https://naturalearth.s3.amazonaws.com/10m_cultural/ne_10m_admin_1_states_provinces.zip",
+          "destination": "data-raw/naturalearth/admin/ne_10m_admin_1_states_provinces.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Natural Earth admin layer.",
+          "requires_env": null,
+          "extract_to": "data-raw/naturalearth/admin/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://naturalearth.s3.amazonaws.com/10m_cultural/ne_10m_admin_0_countries.zip",
+          "destination": "data-raw/naturalearth/admin/ne_10m_admin_0_countries.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Natural Earth admin layer.",
+          "requires_env": null,
+          "extract_to": "data-raw/naturalearth/admin/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 2,
+      "direct_item_count": 2
+    },
+    {
+      "Priority": "P3",
+      "Phase": "Base maps",
+      "Group": "Natural Earth",
+      "Dataset": "Physical layers",
+      "Specific file/layer": "Land, ocean, rivers, lakes, coastline",
+      "Source URL": "https://www.naturalearthdata.com/",
+      "Format": "Shapefile / GeoJSON",
+      "Use in PupWiki": "Lightweight display layers for maps and editorial visuals.",
+      "Recommended local path": "data-raw/naturalearth/physical/",
+      "Notes": "Use for display, not ETL truth.",
+      "source_row": 59,
+      "id": "xlsm-row-59-physical-layers",
+      "download_items": [
+        {
+          "url": "https://naturalearth.s3.amazonaws.com/10m_physical/ne_10m_land.zip",
+          "destination": "data-raw/naturalearth/physical/ne_10m_land.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Natural Earth physical layer.",
+          "requires_env": null,
+          "extract_to": "data-raw/naturalearth/physical/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://naturalearth.s3.amazonaws.com/10m_physical/ne_10m_lakes.zip",
+          "destination": "data-raw/naturalearth/physical/ne_10m_lakes.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Natural Earth physical layer.",
+          "requires_env": null,
+          "extract_to": "data-raw/naturalearth/physical/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://naturalearth.s3.amazonaws.com/10m_physical/ne_10m_rivers_lake_centerlines.zip",
+          "destination": "data-raw/naturalearth/physical/ne_10m_rivers_lake_centerlines.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Natural Earth physical layer.",
+          "requires_env": null,
+          "extract_to": "data-raw/naturalearth/physical/",
+          "unverified_candidate": true
+        },
+        {
+          "url": "https://naturalearth.s3.amazonaws.com/10m_physical/ne_10m_coastline.zip",
+          "destination": "data-raw/naturalearth/physical/ne_10m_coastline.zip",
+          "kind": "file",
+          "default": true,
+          "large": false,
+          "notes": "Natural Earth physical layer.",
+          "requires_env": null,
+          "extract_to": "data-raw/naturalearth/physical/",
+          "unverified_candidate": true
+        }
+      ],
+      "download_item_count": 4,
+      "direct_item_count": 4
+    },
+    {
+      "Priority": "P3/P4",
+      "Phase": "Animal care compliance",
+      "Group": "USDA APHIS",
+      "Dataset": "Animal Care Public Search Tool",
+      "Specific file/layer": "AWA regulated entities/search",
+      "Source URL": "https://www.aphis.usda.gov/animal-care/awa-services/usda-animal-care-public-search-tool",
+      "Format": "Search tool / reports",
+      "Use in PupWiki": "Careful breeder/dealer/license education pages; not core OSM map data.",
+      "Recommended local path": "data-raw/usda/aphis/",
+      "Notes": "Avoid legal/compliance claims unless verified.",
+      "source_row": 60,
+      "id": "xlsm-row-60-animal-care-public-search-tool",
+      "download_items": [
+        {
+          "url": "https://www.aphis.usda.gov/animal-care/awa-services/usda-animal-care-public-search-tool",
+          "destination": "data-raw/usda/aphis/_SOURCE_URL.txt",
+          "kind": "landing_page",
+          "default": false,
+          "large": false,
+          "notes": "Landing/source page from XLSM. Manual resolver may be needed.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": false
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 0
+    },
+    {
+      "Priority": "P3/P4",
+      "Phase": "Animal care compliance",
+      "Group": "USDA APHIS",
+      "Dataset": "AWA Inspection / Annual Reports",
+      "Specific file/layer": "Animal Welfare Act report data",
+      "Source URL": "https://direct.aphis.usda.gov/awa/annual-inspection-reports",
+      "Format": "Search/report data",
+      "Use in PupWiki": "Only for breeder/license education; not a general dog-service source.",
+      "Recommended local path": "data-raw/usda/aphis/awa-reports/",
+      "Notes": "High trust-risk; handle carefully.",
+      "source_row": 61,
+      "id": "xlsm-row-61-awa-inspection-annual-reports",
+      "download_items": [
+        {
+          "url": "https://direct.aphis.usda.gov/awa/annual-inspection-reports",
+          "destination": "data-raw/usda/aphis/awa-reports/_SOURCE_URL.txt",
+          "kind": "landing_page",
+          "default": false,
+          "large": false,
+          "notes": "Landing/source page from XLSM. Manual resolver may be needed.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": false
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 0
+    },
+    {
+      "Priority": "P4",
+      "Phase": "Buildings",
+      "Group": "Microsoft",
+      "Dataset": "US Building Footprints",
+      "Specific file/layer": "US building footprints by state",
+      "Source URL": "https://github.com/microsoft/USBuildingFootprints",
+      "Format": "GeoJSON by state",
+      "Use in PupWiki": "Advanced urban context/building density; not needed for first PupWiki Places release.",
+      "Recommended local path": "data-raw/microsoft/us-building-footprints/",
+      "Notes": "Huge; only if clear use case.",
+      "source_row": 62,
+      "id": "xlsm-row-62-us-building-footprints",
+      "download_items": [
+        {
+          "url": "https://github.com/microsoft/USBuildingFootprints",
+          "destination": "data-raw/microsoft/us-building-footprints/_SOURCE_URL.txt",
+          "kind": "landing_page",
+          "default": false,
+          "large": false,
+          "notes": "Landing/source page from XLSM. Manual resolver may be needed.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": false
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 0
+    },
+    {
+      "Priority": "P4",
+      "Phase": "Buildings",
+      "Group": "Microsoft",
+      "Dataset": "Global ML Building Footprints",
+      "Specific file/layer": "Global/updated building footprints",
+      "Source URL": "https://github.com/microsoft/GlobalMLBuildingFootprints",
+      "Format": "CSV/GeoJSON links",
+      "Use in PupWiki": "Advanced global/updated footprint enrichment; only later.",
+      "Recommended local path": "data-raw/microsoft/global-ml-building-footprints/",
+      "Notes": "Very large.",
+      "source_row": 63,
+      "id": "xlsm-row-63-global-ml-building-footprints",
+      "download_items": [
+        {
+          "url": "https://github.com/microsoft/GlobalMLBuildingFootprints",
+          "destination": "data-raw/microsoft/global-ml-building-footprints/_SOURCE_URL.txt",
+          "kind": "landing_page",
+          "default": false,
+          "large": false,
+          "notes": "Landing/source page from XLSM. Manual resolver may be needed.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": false
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 0
+    },
+    {
+      "Priority": "P4",
+      "Phase": "Environmental context",
+      "Group": "EPA EJScreen",
+      "Dataset": "EJScreen raw data",
+      "Specific file/layer": "Environmental justice screening data",
+      "Source URL": "https://www.epa.gov/ejscreen",
+      "Format": "Geodatabase / CSV / services",
+      "Use in PupWiki": "Advanced environmental context; likely not needed for PupWiki geo MVP.",
+      "Recommended local path": "data-raw/epa/ejscreen/",
+      "Notes": "Use current EPA pages/services; older snapshots may appear in search.",
+      "source_row": 64,
+      "id": "xlsm-row-64-ejscreen-raw-data",
+      "download_items": [
+        {
+          "url": "https://www.epa.gov/ejscreen",
+          "destination": "data-raw/epa/ejscreen/_SOURCE_URL.txt",
+          "kind": "landing_page",
+          "default": false,
+          "large": false,
+          "notes": "Landing/source page from XLSM. Manual resolver may be needed.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": false
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 0
+    },
+    {
+      "Priority": "P4",
+      "Phase": "Micro geographies",
+      "Group": "Census ACS/TIGER",
+      "Dataset": "Tracts / Block Groups",
+      "Specific file/layer": "Small-area boundaries and ACS data",
+      "Source URL": "https://api.census.gov/data/2024/acs/acs5.html",
+      "Format": "Shapefile / API",
+      "Use in PupWiki": "Advanced local density analytics and future premium insights.",
+      "Recommended local path": "data-raw/census/tracts_blockgroups/",
+      "Notes": "Too granular for first pSEO launch.",
+      "source_row": 65,
+      "id": "xlsm-row-65-tracts-block-groups",
+      "download_items": [
+        {
+          "url": "https://api.census.gov/data/2024/acs/acs5.html",
+          "destination": "data-raw/census/tracts_blockgroups/_SOURCE_URL.txt",
+          "kind": "landing_page",
+          "default": false,
+          "large": false,
+          "notes": "Landing/source page from XLSM. Manual resolver may be needed.",
+          "requires_env": null,
+          "extract_to": null,
+          "unverified_candidate": false
+        }
+      ],
+      "download_item_count": 1,
+      "direct_item_count": 0
+    },
+    {
+      "Priority": "P4",
+      "Phase": "Local data",
+      "Group": "City/state open data portals",
+      "Dataset": "Local dog parks / animal services / park rules",
+      "Specific file/layer": "Varies by city/state portal",
+      "Source URL": "ArcGIS REST / GeoJSON / CSV",
+      "Format": "Manual enrichment for top cities and official dog park rules.",
+      "Use in PupWiki": "data-raw/local-open-data/",
+      "Recommended local path": "Use selectively for high-value cities.",
+      "Notes": null,
+      "source_row": 66,
+      "id": "xlsm-row-66-local-dog-parks-animal-services-park-rules",
+      "download_items": [],
+      "download_item_count": 0,
+      "direct_item_count": 0
+    },
+    {
+      "Priority": "P4",
+      "Phase": "Local data",
+      "Group": "ArcGIS Hub public datasets",
+      "Dataset": "City/county/state GIS layers",
+      "Specific file/layer": "https://hub.arcgis.com/",
+      "Source URL": "ArcGIS REST / GeoJSON / CSV",
+      "Format": "Official local POI enrichment where OSM is weak.",
+      "Use in PupWiki": "data-raw/arcgis-hub/",
+      "Recommended local path": "Not scalable as first source; great for top-city refinement.",
+      "Notes": null,
+      "source_row": 67,
+      "id": "xlsm-row-67-city-county-state-gis-layers",
+      "download_items": [],
+      "download_item_count": 0,
+      "direct_item_count": 0
+    }
+  ]
+}

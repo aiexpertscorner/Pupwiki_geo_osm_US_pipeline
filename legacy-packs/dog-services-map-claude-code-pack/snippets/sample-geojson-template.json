@@ -1,0 +1,52 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "dataset_id": "pupwiki-dog-services-sample",
+    "generated_at": "2026-04-26",
+    "source_summary": "Sample fictional data only. Replace with generated OSM-derived output.",
+    "attribution": "\u00a9 OpenStreetMap contributors. Data available under ODbL when using OSM-derived data.",
+    "disclaimer": "Listings may be incomplete. Verify hours, services and dog access rules before visiting."
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "sample_vet_001",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -118.2437,
+          34.0522
+        ]
+      },
+      "properties": {
+        "id": "sample_vet_001",
+        "source": "sample",
+        "source_id": "sample/vet/001",
+        "source_type": "sample",
+        "source_license": "sample",
+        "name": "Sample Veterinary Clinic",
+        "category": "veterinary_clinics",
+        "subcategory": "veterinary",
+        "country": "US",
+        "state": "California",
+        "city": "Los Angeles",
+        "postcode": null,
+        "address": null,
+        "phone": null,
+        "website": null,
+        "email": null,
+        "opening_hours": null,
+        "operator": null,
+        "brand": null,
+        "dog_policy": null,
+        "emergency": false,
+        "osm_tags": {},
+        "confidence_score": 0.5,
+        "claim_strength": "sample",
+        "verification_required": true,
+        "last_seen_at": "2026-04-26",
+        "updated_at": "2026-04-26"
+      }
+    }
+  ]
+}
