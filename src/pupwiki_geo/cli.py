@@ -13,10 +13,10 @@ from .copy_public import copy_for_pupwiki
 from .downloads import download_file, iter_download_items, verify_url
 from .drive import download_drive_osm
 from .extract_osm import extract_osm_pbf
-from .qa import run_qa
+from .qa import run_extract_qa, run_qa
 from .unpack import unpack_archives
 
-ROOTS = ["data-raw", "data-work", "data-build", "tmp", "logs", "data-raw/osm/google-drive", "data-work/osm", "data-work/boundaries"]
+ROOTS = ["data-raw", "data-work", "data-build", "tmp", "logs", "data-raw/osm/google-drive", "data-work/osm", "data-work/boundaries", "data-work/qa"]
 
 
 def cmd_init(args):
@@ -57,8 +57,33 @@ def cmd_drive_osm(args):
 
 
 def cmd_extract_osm(args):
-    stats = extract_osm_pbf(args.pbf, args.out, category_config=args.categories, keep_other=args.keep_other)
+    interactive = None
+    if args.yes:
+        interactive = False
+    if args.interactive:
+        interactive = True
+    stats = extract_osm_pbf(
+        args.pbf,
+        args.out,
+        category_config=args.categories,
+        keep_other=args.keep_other,
+        include_categories=args.include_categories,
+        exclude_categories=args.exclude_categories,
+        object_types=args.object_types,
+        interactive=interactive,
+        batch_size=args.batch_size,
+        max_objects=args.max_objects,
+        max_written=args.max_written,
+        progress_every=args.progress_every,
+        progress_seconds=args.progress_seconds,
+        stats_path=args.stats_path,
+        overwrite=not args.no_overwrite,
+    )
     print(json.dumps(stats, indent=2))
+
+
+def cmd_extract_qa(args):
+    print(json.dumps(run_extract_qa(args.input, args.out), indent=2))
 
 
 def cmd_build(args):
@@ -115,7 +140,24 @@ def main(argv=None):
     s.add_argument("--out", required=True)
     s.add_argument("--categories", default="configs/osm_dog_categories.json")
     s.add_argument("--keep-other", action="store_true")
+    s.add_argument("--include-categories", help="Comma-separated category ids/preset selection, e.g. core or dog-parks,pet-stores")
+    s.add_argument("--exclude-categories", help="Comma-separated category ids to skip")
+    s.add_argument("--object-types", help="node, way, relation, or comma-separated values")
+    s.add_argument("--batch-size", type=int, help="Rows per part file. 0 disables batching.")
+    s.add_argument("--max-objects", type=int)
+    s.add_argument("--max-written", type=int)
+    s.add_argument("--progress-every", type=int, default=500000)
+    s.add_argument("--progress-seconds", type=float, default=20.0)
+    s.add_argument("--stats-path")
+    s.add_argument("--no-overwrite", action="store_true")
+    s.add_argument("--yes", action="store_true", help="Non-interactive defaults")
+    s.add_argument("--interactive", action="store_true", help="Force interactive prompts")
     s.set_defaults(func=cmd_extract_osm)
+
+    s = sub.add_parser("extract-qa")
+    s.add_argument("--input", required=True)
+    s.add_argument("--out", default="data-work/qa/extract")
+    s.set_defaults(func=cmd_extract_qa)
 
     s = sub.add_parser("build")
     s.add_argument("--input", required=True)

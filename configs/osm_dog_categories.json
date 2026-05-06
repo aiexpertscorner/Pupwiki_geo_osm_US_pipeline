@@ -1,48 +1,36 @@
 {
-  "categories": [
-    {
-      "id": "veterinary-clinics",
-      "label": "Veterinary clinics",
-      "tier": "A",
-      "indexable": true,
-      "description": "Veterinary clinics and animal hospitals from OSM veterinary tags.",
-      "rules": [
-        {"all": {"amenity": "veterinary"}},
-        {"all": {"healthcare": "veterinary"}}
-      ],
-      "excludeIfEmergency": true,
-      "confidence": "high"
-    },
-    {
-      "id": "emergency-vets",
-      "label": "Emergency vets",
-      "tier": "A",
-      "indexable": true,
-      "description": "Emergency/urgent veterinary locations. Emergency availability must be verified before visiting.",
-      "rules": [
-        {"all": {"amenity": "veterinary", "emergency": "yes"}},
-        {"all": {"healthcare": "veterinary", "emergency": "yes"}},
-        {"anyBase": [{"amenity": "veterinary"}, {"healthcare": "veterinary"}], "nameRegex": "emergency|urgent|24 hour|24-hour|animal hospital|veterinary emergency"}
-      ],
-      "confidence": "medium"
-    },
-    {"id": "dog-parks", "label": "Dog parks", "tier": "A", "indexable": true, "rules": [{"all": {"leisure": "dog_park"}}], "confidence": "high"},
-    {"id": "pet-stores", "label": "Pet stores", "tier": "A", "indexable": true, "rules": [{"all": {"shop": "pet"}}], "confidence": "high"},
-    {"id": "dog-grooming", "label": "Dog grooming", "tier": "A", "indexable": true, "rules": [{"all": {"shop": "pet_grooming"}}, {"nameRegex": "dog groom|pet groom|grooming|pet salon"}], "confidence": "medium"},
-    {"id": "animal-shelters", "label": "Animal shelters", "tier": "A", "indexable": true, "rules": [{"all": {"amenity": "animal_shelter"}}], "confidence": "medium"},
-    {"id": "dog-boarding-daycare", "label": "Dog boarding and daycare", "tier": "A", "indexable": true, "rules": [{"all": {"amenity": "animal_boarding"}}, {"all": {"amenity": "dog_daycare"}}, {"nameRegex": "dog daycare|dog boarding|kennel|pet boarding"}], "confidence": "medium"},
-    {"id": "dog-training", "label": "Dog training", "tier": "A", "indexable": true, "rules": [{"all": {"amenity": "animal_training"}}, {"all": {"animal_training": "dog"}}, {"nameRegex": "dog training|obedience|puppy class|canine training"}], "confidence": "medium"},
-    {"id": "dog-friendly-hotels", "label": "Pet-friendly hotels", "tier": "B", "indexable": false, "rules": [{"amenityOrTourism": ["hotel", "motel", "guest_house"], "dogAccess": true}], "confidence": "low"},
-    {"id": "dog-friendly-restaurants", "label": "Dog-friendly restaurants and cafes", "tier": "B", "indexable": false, "rules": [{"amenityIn": ["restaurant", "cafe", "bar", "pub"], "dogAccess": true}], "confidence": "low"},
-    {"id": "dog-friendly-beaches", "label": "Dog-friendly beaches", "tier": "B", "indexable": false, "rules": [{"anyBase": [{"natural": "beach"}, {"leisure": "beach"}], "dogAccess": true}], "confidence": "low"},
-    {"id": "dog-friendly-parks", "label": "Dog-friendly parks", "tier": "B", "indexable": false, "rules": [{"all": {"leisure": "park"}, "dogAccess": true}], "confidence": "low"},
-    {"id": "dog-waste-stations", "label": "Dog waste stations", "tier": "C", "indexable": false, "rules": [{"all": {"amenity": "waste_basket", "waste": "dog_excrement"}}, {"all": {"amenity": "dog_toilet"}}], "confidence": "medium"},
-    {"id": "dog-water-points", "label": "Dog water points", "tier": "C", "indexable": false, "rules": [{"all": {"amenity": "drinking_water"}, "dogAccess": true}], "confidence": "low"},
-    {"id": "dog-wash", "label": "Dog wash", "tier": "C", "indexable": false, "rules": [{"all": {"dog_washing": "yes"}}, {"nameRegex": "dog wash|pet wash|self service pet wash"}], "confidence": "medium"},
-    {"id": "pet-crematoriums", "label": "Pet crematoriums and memorial services", "tier": "C", "indexable": false, "rules": [{"all": {"amenity": "crematorium", "animal": "yes"}}, {"all": {"amenity": "grave_yard", "animal": "yes"}}], "confidence": "low"}
-  ],
-  "dogAccessValues": ["yes", "designated", "leashed", "outside", "permissive"],
+  "version": "2026-05-pupwiki-dog-poi-v2",
+  "description": "PupWiki OSM dog POI taxonomy. Uses explicit OSM tags first, then cautious name-regex fallbacks with lower confidence.",
+  "dogAccessValues": ["yes", "designated", "leashed", "outside", "permissive", "customers", "allowed"],
   "safeFrontendTags": [
-    "name", "amenity", "shop", "leisure", "healthcare", "tourism", "natural", "emergency", "dog", "pets", "pets_allowed", "opening_hours", "website", "contact:website", "phone", "contact:phone", "email", "contact:email", "addr:housenumber", "addr:street", "addr:city", "addr:state", "addr:postcode"
+    "name", "alt_name", "operator", "brand", "amenity", "shop", "office", "leisure", "healthcare", "tourism", "natural", "emergency", "dog", "dogs", "pets", "pets_allowed", "animal", "animal_training", "animal_breeding", "diet:dog", "dog_washing", "waste", "opening_hours", "website", "contact:website", "url", "phone", "contact:phone", "email", "contact:email", "addr:housenumber", "addr:street", "addr:unit", "addr:city", "addr:state", "addr:postcode", "addr:country"
+  ],
+  "reviewRules": {
+    "emergency-vets": "Always display a verify-before-visiting warning unless emergency=yes is present.",
+    "dog-friendly-restaurants": "Dog access and patio rules can change; do not claim dogs are always allowed.",
+    "dog-friendly-hotels": "Pet policies, fees and weight limits can change; send users to official hotel site.",
+    "animal-breeders": "Do not endorse breeders. Use neutral directory wording and add responsible-breeder guidance."
+  },
+  "categories": [
+    {"id":"veterinary-clinics","legacyIds":["veterinary_clinics"],"label":"Veterinary clinics","tier":"A","indexable":true,"description":"Veterinary clinics and animal hospitals from explicit OSM veterinary tags.","rules":[{"id":"amenity_veterinary","all":{"amenity":"veterinary"},"confidence":"high"},{"id":"healthcare_veterinary","all":{"healthcare":"veterinary"},"confidence":"high"}],"excludeIfEmergency":true,"confidence":"high"},
+    {"id":"emergency-vets","legacyIds":["emergency_vets"],"label":"Emergency vets","tier":"A","indexable":true,"description":"Emergency or urgent veterinary locations. Emergency availability must be verified before visiting.","rules":[{"id":"amenity_veterinary_emergency","all":{"amenity":"veterinary","emergency":"yes"},"confidence":"high"},{"id":"healthcare_veterinary_emergency","all":{"healthcare":"veterinary","emergency":"yes"},"confidence":"high"},{"id":"vet_name_emergency","anyBase":[{"amenity":"veterinary"},{"healthcare":"veterinary"}],"nameRegex":"emergency|urgent|24 hour|24-hour|24/7|after hours|animal emergency|veterinary emergency","confidence":"medium","needsReview":true}],"confidence":"medium"},
+    {"id":"animal-rehab","legacyIds":["rehab"],"label":"Animal rehabilitation and physio","tier":"B","indexable":true,"description":"Canine or animal rehabilitation, physiotherapy and recovery services.","rules":[{"id":"physiotherapist_animal","all":{"healthcare":"physiotherapist","animal":"yes"},"confidence":"medium"},{"id":"physio_dog_access","all":{"healthcare":"physiotherapist"},"dogAccess":true,"confidence":"low","needsReview":true},{"id":"rehab_name_regex","nameRegex":"animal rehab|pet rehab|canine rehab|veterinary rehabilitation|dog physiotherapy|canine physical therapy","confidence":"medium","needsReview":true}],"confidence":"medium"},
+    {"id":"pet-stores","legacyIds":["pet_stores"],"label":"Pet stores","tier":"A","indexable":true,"description":"Pet stores and dog supply retailers.","rules":[{"id":"shop_pet","all":{"shop":"pet"},"confidence":"high"},{"id":"shop_pet_pet_dog","all":{"shop":"pet","pet":"dog"},"confidence":"high"}],"confidence":"high"},
+    {"id":"dog-grooming","legacyIds":["grooming"],"label":"Dog grooming","tier":"A","indexable":true,"description":"Dog groomers, pet salons and grooming-focused businesses.","rules":[{"id":"shop_pet_grooming","all":{"shop":"pet_grooming"},"confidence":"high"},{"id":"grooming_name_regex","nameRegex":"dog groom|pet groom|grooming|pet salon|dog salon","confidence":"medium","needsReview":true}],"confidence":"medium"},
+    {"id":"dog-bakeries","legacyIds":["dog_bakeries"],"label":"Dog bakeries","tier":"B","indexable":true,"description":"Dog bakeries and dog treat shops.","rules":[{"id":"pastry_diet_dog","all":{"shop":"pastry","diet:dog":"yes"},"confidence":"high"},{"id":"dog_bakery_name_regex","nameRegex":"dog bakery|pet bakery|dog treats|dog biscuit|pupcake|barkery","confidence":"medium","needsReview":true}],"confidence":"medium"},
+    {"id":"dog-training","legacyIds":["training"],"label":"Dog training","tier":"A","indexable":true,"description":"Dog training, obedience, puppy classes and canine behavior services.","rules":[{"id":"amenity_animal_training","all":{"amenity":"animal_training"},"confidence":"medium"},{"id":"animal_training_dog","all":{"animal_training":"dog"},"confidence":"high"},{"id":"dog_training_name_regex","nameRegex":"dog training|obedience|puppy class|canine training|dog trainer|canine obedience|behavior training","confidence":"medium","needsReview":true}],"confidence":"medium"},
+    {"id":"animal-breeders","legacyIds":["breeders"],"label":"Animal breeders","tier":"C","indexable":false,"description":"Animal breeding locations. Use neutral directory wording and responsible-breeder warnings.","rules":[{"id":"amenity_animal_breeding","all":{"amenity":"animal_breeding"},"confidence":"medium","needsReview":true},{"id":"animal_breeding_dog","all":{"animal_breeding":"dog"},"confidence":"medium","needsReview":true}],"confidence":"medium"},
+    {"id":"animal-shelters","legacyIds":["shelters"],"label":"Animal shelters","tier":"A","indexable":true,"description":"Animal shelters and rescues.","rules":[{"id":"amenity_animal_shelter","all":{"amenity":"animal_shelter"},"confidence":"medium"},{"id":"shelter_rescue_name_regex","nameRegex":"animal shelter|dog rescue|pet rescue|humane society|spca","confidence":"low","needsReview":true}],"confidence":"medium"},
+    {"id":"dog-boarding-daycare","legacyIds":["boarding_daycare"],"label":"Dog boarding and daycare","tier":"A","indexable":true,"description":"Dog boarding, kennels and dog daycare services.","rules":[{"id":"amenity_animal_boarding","all":{"amenity":"animal_boarding"},"confidence":"medium"},{"id":"amenity_dog_daycare","all":{"amenity":"dog_daycare"},"confidence":"high"},{"id":"boarding_name_regex","nameRegex":"dog daycare|dog boarding|kennel|pet boarding|dog hotel|pet resort","confidence":"medium","needsReview":true}],"confidence":"medium"},
+    {"id":"dog-walkers","legacyIds":["dog_walkers"],"label":"Dog walkers","tier":"B","indexable":true,"description":"Dog walkers and pet sitting services.","rules":[{"id":"office_dog_walker","all":{"office":"dog_walker"},"confidence":"high"},{"id":"walker_name_regex","nameRegex":"dog walker|dog walking|pet sitting|pet sitter","confidence":"medium","needsReview":true}],"confidence":"medium"},
+    {"id":"dog-parks","legacyIds":["dog_parks"],"label":"Dog parks","tier":"A","indexable":true,"description":"Official dog parks and off-leash dog areas.","rules":[{"id":"leisure_dog_park","all":{"leisure":"dog_park"},"confidence":"high"},{"id":"park_dog_designated","all":{"leisure":"park","dog":"designated"},"confidence":"medium"}],"confidence":"high"},
+    {"id":"dog-friendly-beaches","legacyIds":["dog_beaches"],"label":"Dog-friendly beaches","tier":"B","indexable":false,"description":"Beaches where OSM indicates dog access. Rules can be seasonal.","rules":[{"id":"leisure_beach_dog_access","anyBase":[{"natural":"beach"},{"leisure":"beach"}],"dogAccess":true,"confidence":"low","needsReview":true}],"confidence":"low"},
+    {"id":"dog-friendly-hotels","legacyIds":["dog_friendly_hotels"],"label":"Pet-friendly hotels","tier":"B","indexable":false,"description":"Hotels with OSM pet/dog access tags. Fees and policies must be verified.","rules":[{"id":"hotel_pet_access","amenityOrTourism":["hotel","motel","guest_house","hostel","camp_site"],"dogAccess":true,"confidence":"low","needsReview":true}],"confidence":"low"},
+    {"id":"dog-friendly-restaurants","legacyIds":["dog_friendly_food_drink"],"label":"Dog-friendly restaurants and cafes","tier":"B","indexable":false,"description":"Restaurants, cafes, bars and pubs with OSM dog access tags.","rules":[{"id":"food_drink_dog_access","amenityIn":["restaurant","cafe","bar","pub","biergarten"],"dogAccess":true,"confidence":"low","needsReview":true}],"confidence":"low"},
+    {"id":"dog-friendly-parks","label":"Dog-friendly parks","tier":"B","indexable":false,"description":"Parks with dog access tags that are not necessarily dog parks.","rules":[{"id":"park_dog_access","all":{"leisure":"park"},"dogAccess":true,"confidence":"low","needsReview":true}],"confidence":"low"},
+    {"id":"dog-waste-stations","legacyIds":["dog_waste"],"label":"Dog waste facilities","tier":"C","indexable":false,"description":"Dog waste baskets, dog toilets and cleanup facilities.","rules":[{"id":"waste_basket_dog_excrement","all":{"amenity":"waste_basket","waste":"dog_excrement"},"confidence":"medium"},{"id":"amenity_dog_toilet","all":{"amenity":"dog_toilet"},"confidence":"medium"}],"confidence":"medium"},
+    {"id":"dog-water-points","label":"Dog water points","tier":"C","indexable":false,"description":"Dog-accessible drinking water points.","rules":[{"id":"drinking_water_dog_access","all":{"amenity":"drinking_water"},"dogAccess":true,"confidence":"low","needsReview":true}],"confidence":"low"},
+    {"id":"dog-wash","label":"Dog wash","tier":"C","indexable":false,"description":"Dog wash and self-service pet wash locations.","rules":[{"id":"dog_washing_yes","all":{"dog_washing":"yes"},"confidence":"medium"},{"id":"dog_wash_name_regex","nameRegex":"dog wash|pet wash|self service pet wash|self-service pet wash","confidence":"medium","needsReview":true}],"confidence":"medium"},
+    {"id":"pet-crematoriums","legacyIds":["pet_aftercare"],"label":"Pet aftercare","tier":"C","indexable":false,"description":"Pet crematoriums, pet cemeteries and memorial services.","rules":[{"id":"crematorium_animal","all":{"amenity":"crematorium","animal":"yes"},"confidence":"low","needsReview":true},{"id":"grave_yard_animal","all":{"amenity":"grave_yard","animal":"yes"},"confidence":"low","needsReview":true},{"id":"aftercare_name_regex","nameRegex":"pet cremation|pet cemetery|pet memorial|animal cremation","confidence":"low","needsReview":true}],"confidence":"low"}
   ]
 }
